@@ -1,5 +1,6 @@
 export const scrapeData = async() => {
     try {
+      console.log("inside scrapte")
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/job`,
         {
@@ -7,11 +8,7 @@ export const scrapeData = async() => {
           headers: {
             "Content-Type": "application/json",
           },
-        //   credentials: "include",
-          cache: "force-cache",
-          next: {
-            tags: ["userData"],
-          },
+          credentials: "include",
         }
       );
   
@@ -40,10 +37,10 @@ export const getJobData = async(page: number, portal?: string, title?: string) =
           headers: {
             "Content-Type": "application/json",
           },
-        //   credentials: "include",
+          credentials: "include",
           cache: "no-cache",
           next: {
-            tags: ["userData"],
+            tags: ["jobData"],
           },
         }
       );
