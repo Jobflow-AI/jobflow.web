@@ -1,8 +1,9 @@
+import Link from 'next/link';
 import React from 'react';
 
 const Navbar = ({ user }: any) => {
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-white shadow-md sticky top-0 left-0 w-full z-50 h-16">
       <div className="container mx-auto flex items-center justify-between px-6">
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-2">
@@ -17,7 +18,7 @@ const Navbar = ({ user }: any) => {
         {/* Right Section */}
         {user ? (
           // Profile Icon when user is logged in
-          <div className="flex items-center space-x-4">
+          <Link href={'/profile'} className="flex items-center space-x-4">
             <img
               src={user.profileImage || "/assets/default-profile.png"} // Default image if no profileImage
               alt="Profile"
@@ -27,14 +28,14 @@ const Navbar = ({ user }: any) => {
             <span className="text-sm text-black font-medium">
               {user.name || "User"}
             </span>
-          </div>
+          </Link>
         ) : (
           // Start Tracking Your Jobs button
-          <button
+          <Link href={'/signup'}
             className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm"
           >
             Start Tracking Your Jobs
-          </button>
+          </Link>
         )}
       </div>
     </nav>

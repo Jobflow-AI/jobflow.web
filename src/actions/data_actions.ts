@@ -27,7 +27,7 @@ export const scrapeData = async() => {
 }
 
 
-export const getJobData = async(page: number, portal?: string, title?: string) => {
+export const getJobData = async(page?: number, portal?: string, title?: string) => {
     console.log("hitting this", page)
     try {
       const res = await fetch(
