@@ -2,21 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import debounce from "lodash.debounce";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/shared/CustomCard";
-import { getJobData } from "@/actions/data_actions";
+import { getJobById, getJobData } from "@/actions/data_actions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import Loader from "@/components/shared/Loader";
-import Link from "next/link";
-import { useAppSelector } from "@/redux/hooks";
 import { renderJobCard } from "@/components/shared/jobCard";
+import AppliedJobsModal from "./_components/appliedJobs";
 
 // Job portals
 const jobPortals = [
@@ -38,6 +29,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [selectedPortal, setSelectedPortal] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [appliedJobId, setAppliedJobId] = useState('')
+  const [appliedJob, setAppliedJob] = useState()
 
   // Fetch jobs from API
   const fetchJobs = async (page: number, portal: string, query: string) => {
@@ -71,6 +64,15 @@ export default function Dashboard() {
     debouncedFetchJobs(page, selectedPortal, searchQuery);
   }, [page, selectedPortal, searchQuery, debouncedFetchJobs]);
 
+  useEffect(() => {
+  ( async () => {
+    if(appliedJobId) {
+      const data = await getJobById(appliedJobId)
+      setAppliedJob(data?.job)
+    }
+  }
+)()
+  }, [appliedJobId])
   // Load more jobs
   const loadMoreJobs = () => setPage((prevPage) => prevPage + 1);
 
@@ -78,6 +80,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-4">
+      <AppliedJobsModal jobs={jobs} />
       {loading && (
         <div className="flex justify-center items-center h-32">
           <Loader />
@@ -121,7 +124,7 @@ export default function Dashboard() {
         <TabsContent value="">
           {jobs.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {jobs.map(renderJobCard)}
+              {jobs.map((job) => renderJobCard(job))}
             </div>
           ) : (
             <p className="text-center text-gray-500">No jobs available.</p>
@@ -132,7 +135,7 @@ export default function Dashboard() {
           <TabsContent key={portal} value={portal}>
             {selectedPortal === portal && jobs.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {jobs.map(renderJobCard)}
+              {jobs.map((job) => renderJobCard(job, setAppliedJobId))}
               </div>
             ) : (
               <p className="text-center text-gray-500">No jobs available.</p>
