@@ -1,3 +1,4 @@
+"use server"
 import { getCookie } from "./get_cookie";
 
 
@@ -100,4 +101,79 @@ export const getUser = async () => {
       }
     }
   };
+
+export const getYourJobs = async () => {
+    const token = await getCookie("token");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/jobs/get`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `token=${token}`,
+          },
+          credentials: "include",
+          // cache: "force-cache",
+          // next: {
+          //   tags: ["jobData"],
+          // },
+        }
+      );
+  
+      const data = await res.json();
+
+      return data;
+    } catch (error: any) {
+      return { success: false, error: error.message || "Unknown error" };
+
+    }
+  };
+
+
+  export const applyJob = async (jobId: string) => {
+    const token = await getCookie("token");  
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/job/apply?jobId=${jobId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `token=${token}`,
+          },
+          credentials: "include",
+        }
+      );
+  
+      return await res.json();
+    } catch (error: any) {
+      console.error("Error in applyJob:", error);
+      return { success: false, error: error.message || "Unknown error" };
+    }
+  };
+  
+  
+  export const updateJobStatus = async (jobId: string, status: string) => {
+    const token = await getCookie("token");    
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/job/update/status?jobId=${jobId}&status=${status}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `token=${token}`,
+          },
+          credentials: "include",
+        }
+      );
+  
+      return await res.json();
+    } catch (error: any) {
+      console.error("Error in updating status:", error);
+      return { success: false, error: error.message || "Unknown error" };
+    }
+  };
+  
   
