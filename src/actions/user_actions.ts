@@ -1,4 +1,5 @@
 "use server"
+import { revalidateTag } from "next/cache";
 import { getCookie } from "./get_cookie";
 
 
@@ -13,10 +14,6 @@ export const registerUser = async(data: any) => {
           },
           body: JSON.stringify(data),
           credentials: "include",
-          cache: "force-cache",
-          next: {
-            tags: ["userData"],
-          },
         }
       );
   
@@ -46,10 +43,6 @@ export const loginUser = async(data: any) => {
           },
           body: JSON.stringify(data),
           credentials: "include",
-          cache: "force-cache",
-          next: {
-            tags: ["userData"],
-          },
         }
       );
   
@@ -91,6 +84,37 @@ export const getUser = async () => {
       const data = await res.json();
 
       return data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Error in fetching logged in user: ${error.message}`);
+      } else {
+        throw new Error(
+          "An unknown error occurred while fetching logged in user"
+        );
+      }
+    }
+  };
+
+export const updateUser = async (data: any) => {
+    const token = await getCookie("token");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `token=${token}`,
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+        }
+      );
+  
+      const response = await res.json();
+      revalidateTag('userData')
+
+      return response;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(`Error in fetching logged in user: ${error.message}`);
