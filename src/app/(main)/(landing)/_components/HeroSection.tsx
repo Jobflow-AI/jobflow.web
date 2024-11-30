@@ -13,14 +13,13 @@ const HeroSection = () => {
         Our platform allows you to find all the jobs from top platforms and manage and track your job applications smoothly.
         </p>
 
-        <div className="flex justify-center items-center max-w-md mx-auto mb-10">
-          {/* <GoogleLoginButton className="!rounded-l-md" /> */}
+        <div className="flex flex-col sm:flex-row justify-center items-center max-w-md mx-auto mb-10">
           <input
             type="email"
             placeholder="Enter Your Email Address"
-            className="flex-grow p-3 border border-gray-300 rounded-l-md focus:outline-none"
+            className="flex-grow p-2 sm:p-3 border border-gray-300 rounded-md sm:rounded-l-md focus:outline-none"
           />
-          <button className="px-6 py-3 bg-black text-white rounded-r-md hover:opacity-90">
+          <button className="px-4 py-2 sm:px-6 sm:py-3 bg-black text-white rounded-md sm:rounded-r-md hover:opacity-90 mt-1 sm:mt-0">
             Join Waitlist
           </button>
         </div>

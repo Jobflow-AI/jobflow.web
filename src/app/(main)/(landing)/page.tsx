@@ -23,10 +23,10 @@ const LandingPage = () => {
           <a href="#" className="hover:text-gray-700">
             Solutions
           </a>
-        </nav> 
-        <button className="px-6 py-2 bg-black text-white rounded-full hover:opacity-90">
-          Get Started — It's Free
-        </button>*/}
+        </nav> */}
+        <a href="mailto:hello@jobflow.in" className="text-sm sm:text-lg sm:font-bold text-black bg-white px-4 py-2 rounded-full hover:opacity-70 cursor-pointer">
+          hello@jobflow.in
+        </a>
       </header>
 
       {/* Hero Section */}
