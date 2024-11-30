@@ -20,6 +20,7 @@ const HeroSection = () => {
 
       if (response.status == 201) {
         toast.success("Successfully joined Waitlist")
+        setEmail('')
       } 
     } catch (error: any) {
       toast.error(error.response.data.message || "Something went wrong! Try Again")
