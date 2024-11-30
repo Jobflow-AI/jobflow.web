@@ -1,5 +1,5 @@
 import React from 'react'
-import TrackerBoard from './TrackerBoard'
+import TrackerBoard from './_components/TrackerBoard'
 
 const Tracker = () => {
   return (
