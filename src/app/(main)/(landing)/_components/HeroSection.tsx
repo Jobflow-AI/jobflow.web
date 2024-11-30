@@ -1,16 +1,33 @@
+'use client'
+import apiClient from '@/apiClient/apiClient';
 import GoogleLoginButton from '@/app/(auth)/_components/GoogleLoginButton'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
+import toast from 'react-hot-toast';
 
 const HeroSection = () => {
+  const [email, setEmail] = useState('');
+
+  const handleJoinWaitlist = async () => {
+    try {
+      const response = await apiClient.post(`/join-waitlist?email=${email}`);
+
+      if (response.status == 201) {
+        toast.success("Successfully joined Waitlist")
+      } 
+    } catch (error: any) {
+      toast.error(error.response.data.message || "Something went wrong! Try Again")
+    }
+    }
+
   return (
     <>
-    <section className="text-center px-6 py-16 lg:bg-hero-image bg-no-repeat bg-right">
+      <section className="text-center px-6 py-16 lg:bg-hero-image bg-no-repeat bg-right">
         <h1 className="text-4xl font-bold text-black mb-4">
           Simply Manage Your Jobs
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-        Our platform allows you to find all the jobs from top platforms and manage and track your job applications smoothly.
+          Our platform allows you to find all the jobs from top platforms and manage and track your job applications smoothly.
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center items-center max-w-md mx-auto mb-10">
@@ -18,8 +35,13 @@ const HeroSection = () => {
             type="email"
             placeholder="Enter Your Email Address"
             className="flex-grow p-2 sm:p-3 border border-gray-300 rounded-md sm:rounded-l-md focus:outline-none"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <button className="px-4 py-2 sm:px-6 sm:py-3 bg-black text-white rounded-md sm:rounded-r-md hover:opacity-90 mt-1 sm:mt-0">
+          <button
+            className="px-4 py-2 sm:px-6 sm:py-3 bg-black text-white rounded-md sm:rounded-r-md hover:opacity-90 mt-1 sm:mt-0"
+            onClick={handleJoinWaitlist}
+          >
             Join Waitlist
           </button>
         </div>
