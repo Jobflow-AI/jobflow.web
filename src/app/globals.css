@@ -78,7 +78,7 @@
   }
 
   .bg-hero-image {
-    background-image: url('https://wac-cdn-bfldr.atlassian.com/K3MHR9G8/at/pqscp5k83xxt7pq7f67jftr/JSM_BG_Graphics.webp');
+    background-image: url('/hero-background.webp');
     background-size: contain;
   }
 }
