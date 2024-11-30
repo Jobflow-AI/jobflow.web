@@ -7,8 +7,14 @@ import toast from 'react-hot-toast';
 
 const HeroSection = () => {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleJoinWaitlist = async () => {
+    if (!email) {
+      toast.error("Email is required");
+      return;
+    }
+    setIsLoading(true);
     try {
       const response = await apiClient.post(`/join-waitlist?email=${email}`);
 
@@ -17,8 +23,10 @@ const HeroSection = () => {
       } 
     } catch (error: any) {
       toast.error(error.response.data.message || "Something went wrong! Try Again")
+    } finally {
+      setIsLoading(false);
     }
-    }
+  }
 
   return (
     <>
@@ -37,12 +45,14 @@ const HeroSection = () => {
             className="flex-grow p-2 sm:p-3 border border-gray-300 rounded-md sm:rounded-l-md focus:outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <button
-            className="px-4 py-2 sm:px-6 sm:py-3 bg-black text-white rounded-md sm:rounded-r-md hover:opacity-90 mt-1 sm:mt-0"
+            className={`px-4 py-2 sm:px-6 sm:py-3 ${isLoading ? 'bg-gray-600' : 'bg-black'} text-white rounded-md sm:rounded-r-md hover:opacity-90 mt-1 sm:mt-0`}
             onClick={handleJoinWaitlist}
+            disabled={isLoading}
           >
-            Join Waitlist
+            {isLoading ? 'Joining...' : 'Join Waitlist'}
           </button>
         </div>
         <div className="relative w-full max-w-4xl mx-auto">
