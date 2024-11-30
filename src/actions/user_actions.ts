@@ -85,15 +85,9 @@ export const getUser = async () => {
 
       return data;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(`Error in fetching logged in user: ${error.message}`);
-      } else {
-        throw new Error(
-          "An unknown error occurred while fetching logged in user"
-        );
-      }
-    }
+      console.log(error)
   };
+}
 
 export const updateUser = async (data: any) => {
     const token = await getCookie("token");

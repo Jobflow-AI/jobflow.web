@@ -2,19 +2,21 @@
 import { getJobData } from '@/actions/data_actions';
 import { renderJobCard } from '@/components/shared/jobCard';
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link';
 
 const JobSection = () => {
 
-    const [jobs, setJobs] = useState([]);
+    // const [jobs, setJobs] = useState([]);
 
-    useEffect(() => {
-      const fetchJobs = async () => {
-        const jobData = await getJobData();
-        console.log(jobData, "here is la")
-        setJobs(jobData.jobs);
-      };
-      fetchJobs();
-    }, []);
+    // useEffect(() => {
+    //   const fetchJobs = async () => {
+    //     const jobData = await getJobData();
+    //     console.log(jobData, "here is la")
+    //     setJobs(jobData.jobs);
+    //   };
+    //   fetchJobs();
+    // }, []);
 
   return (
      <>
@@ -31,7 +33,7 @@ const JobSection = () => {
             <div className="max-w-6xl min-h-[400px] mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
               {/* Job Cards */}
               <div className="relative group h-full flex items-center justify-center">
-                {jobs.slice(0, 1).map((job, index) => (
+                {/* {jobs.slice(0, 1).map((job, index) => (
                   <div
                     key={index}
                     className=" transition-transform duration-300 ease-in-out transform group-hover:scale-110"
@@ -39,7 +41,15 @@ const JobSection = () => {
                   >
                     {renderJobCard(job)}
                   </div>
-                ))}
+                ))} */}
+                <a href='https://www.workatastartup.com/jobs/70817' target='_blank'>
+                <Image 
+                  src='/job-section.png' 
+                  alt='Job'
+                  width={400}
+                  height={400}
+                />
+                </a>
               </div>
               {/* Text Content */}
               <div>

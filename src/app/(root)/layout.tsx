@@ -15,7 +15,7 @@ export default async function MainLayout({
   children: React.ReactNode;
 }>) {
 
-  const data = await getUser()
+  const data = await getUser() || null
 
   return (
     <>
