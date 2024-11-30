@@ -7,19 +7,10 @@ export async function middleware(request: NextRequest) {
   const token = getTokenFromStorage(request);
   const userData = await getUser();
 
-  const isPublicPath =
-    path.startsWith("/login") ||
-    path.startsWith("/signup") ||
-    path.startsWith("/verify") ||
-    path.startsWith("/forgot-password") ||
-    path.startsWith("/resetpassword");
+  const isRootPath = path === "/";
 
-  if (token && isPublicPath) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
-  }
-
-  if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
+  if (!token && !isRootPath) {
+    return new NextResponse("Access Denied: The Website is under construction", { status: 403 });
   }
 
   return NextResponse.next();
@@ -36,6 +27,8 @@ export const config = {
   matcher: [
     "/login",
     "/signup",
-    "/"
+    "/",
+    "/jobs",
+    "/tracker"
   ],
 };

@@ -15,7 +15,7 @@ export const renderJobCard = (job: any, setAppliedJobId?: any, viewMode?: boolea
       return (
         <Card
           key={job._id}
-          className="relative p-5 w-full max-w-[350px] border rounded-lg shadow-md bg-white"
+          className="relative p-5 w-full overflow-auto max-w-[350px] border rounded-lg shadow-md bg-white"
         >
           <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
             <div className="flex flex-col md:flex-row items-center space-x-3">

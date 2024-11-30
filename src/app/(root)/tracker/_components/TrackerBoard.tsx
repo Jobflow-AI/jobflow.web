@@ -197,7 +197,7 @@ export default function TrackerBoard() {
   };
 
   return (
-    <div className="flex flex-col border p-3 h-[91vh] overflow-y-hidden">
+    <div className="flex flex-col w-full p-3 h-[91vh] overflow-y-hidden">
       <div className="flex justify-between items-center my-3 sticky top-0">
         <input
           type="text"

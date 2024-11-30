@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import Loader from "@/components/shared/Loader";
 import { renderJobCard } from "@/components/shared/jobCard";
-import AppliedJobsModal from "./_components/appliedJobs";
+import AppliedJobsModal from "./appliedJobs";
 
 // Job portals
 const jobPortals = [

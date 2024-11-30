@@ -16,7 +16,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 
-const GoogleLoginButton = () => {
+const GoogleLoginButton = ({ className = "" }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -66,9 +66,9 @@ const GoogleLoginButton = () => {
     <button
       type="button"
       onClick={() => login()}
-      className={`flex items-center justify-center w-full h-12 border border-gray-300 rounded-lg hover:shadow-md transition-shadow ${
+      className={`flex items-center justify-center w-full h-12 border border-gray-300 rounded-md hover:shadow-md transition-shadow ${
         isLoading ? "cursor-not-allowed bg-gray-100" : "bg-white"
-      }`}
+      } ${className}`}
       disabled={isLoading}
     >
       {isLoading ? (

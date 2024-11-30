@@ -1,5 +1,5 @@
 
-import Dashboard from "./Dashboard"
+import Dashboard from "./_components/Dashboard"
 
 
 export default async function Home() {
