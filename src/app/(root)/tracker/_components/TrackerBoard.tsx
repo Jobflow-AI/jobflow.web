@@ -51,6 +51,8 @@ export default function TrackerBoard() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [currentColumnName, setCurrentColumnName] = useState<string>("");
+
   const fetchJobs = async () => {
     try {
       const data = await getYourJobs();
@@ -126,7 +128,7 @@ export default function TrackerBoard() {
       toast.error("Cannot remove a column that is not empty");
       return;
     }
-    
+
     // Remove the column from tasks
     const updatedTasks = { ...tasks };
     delete updatedTasks[name];
@@ -195,7 +197,7 @@ export default function TrackerBoard() {
   };
 
   return (
-    <div className="flex flex-col p-3 h-[91vh] overflow-y-hidden">
+    <div className="flex flex-col border p-3 h-[91vh] overflow-y-hidden">
       <div className="flex justify-between items-center my-3 sticky top-0">
         <input
           type="text"
@@ -246,9 +248,12 @@ export default function TrackerBoard() {
                     >
                       <button
                         className="w-full my-3 bg-gray-300 p-1 rounded-sm"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                          setCurrentColumnName(listName);
+                          setIsModalOpen(true);
+                        }}
                       >
-                        Create Job +
+                        Create Job ➕
                       </button>
                     </div>
                   )}
@@ -273,14 +278,21 @@ export default function TrackerBoard() {
             </Droppable>
           ))}
           <button onClick={handleAddColumn} className="px-2 bg-gray-400">
-            +
+          ➕
           </button>
         </div>
       </DragDropContext>
-      {isModalOpen && (
-        <CreateJobModel newJob={newJob} setNewJob={setNewJob} setIsModalOpen={setIsModalOpen} handleCreateJob={handleCreateJob} />
-      )}
+      
     </div>
+    {isModalOpen && (
+        <CreateJobModel 
+          newJob={newJob} 
+          setNewJob={setNewJob} 
+          setIsModalOpen={setIsModalOpen} 
+          handleCreateJob={handleCreateJob} 
+          defaultStatus={currentColumnName}
+        />
+      )}
     </div>
   );
 }
