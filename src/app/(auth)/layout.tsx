@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Find Your Job | Login",
-  description:
-    "Single Platform to get job from all platform",
+  title: "JobFlow | Login",
+  description: "Track, Find, and Land Your Dream Job—All in One Place!",
 };
 
 export default async function MainLayout({

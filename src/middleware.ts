@@ -8,10 +8,10 @@ export async function middleware(request: NextRequest) {
   const userData = await getUser();
 
   const isRootPath = path === "/";
-
-  // if (!token && !isRootPath) {
-  //   return new NextResponse("Access Denied: The Website is under construction", { status: 403 });
-  // }
+  
+  if (token && (path === "/login" || path === "/signup")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   return NextResponse.next();
 }

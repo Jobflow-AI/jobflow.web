@@ -8,7 +8,6 @@ import { Toaster } from "react-hot-toast";
 import { getUser } from "@/actions/user_actions";
 import { scrapeAndCreateJobs } from "@/actions/data_actions";
 
- 
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -16,8 +15,8 @@ const fontSans = Inter({
 
 
 export const metadata: Metadata = {
-  title: "Find Your Job",
-  description: "Single Platform to get job from all platform",
+  title: "JobFlow",
+  description: "Track, Find, and Land Your Dream Job—All in One Place!",
 };
 
 export default async function RootLayout({
