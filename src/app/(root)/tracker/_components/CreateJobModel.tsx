@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getCompaniesList } from "@/actions/data_actions"; // Import your action
+import { getCompaniesList, scrapeJob } from "@/actions/data_actions"; // Import your action
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Command, CommandGroup, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -11,18 +11,17 @@ import { Textarea } from "@/components/ui/textarea";
 import Select from 'react-select';
 import { useAppSelector } from "@/redux/hooks";
 import { Country, State, City } from 'country-state-city';
+import { createJob } from "@/actions/user_actions"; // Import the createJob action
 
 const CreateJobModel = ({
   newJob,
   setNewJob,
   setIsModalOpen,
-  handleCreateJob,
   defaultStatus
 }: {
   newJob: any;
   setNewJob: any;
   setIsModalOpen: any;
-  handleCreateJob: any;
   defaultStatus?: string
 }) => {
   const user = useAppSelector(state => state.user.user)
@@ -37,6 +36,7 @@ const CreateJobModel = ({
   const [isFetching, setIsFetching] = useState(false);
 
   const jobTypes = ["Remote", "On-Site", "Full-time", "Part-time", "Contract", "Internship"];
+  const jobSources= ['linkedin', 'ycombinator', 'glassdoor', 'foundit', 'internshala']
   const currencies = ["INR", "USD", "EUR", "GBP"];
 
   useEffect(() => {
@@ -46,6 +46,12 @@ const CreateJobModel = ({
       setCompanies(companies)
     } )()
   }, []);
+
+  useEffect(() => {
+  (async () => {
+     
+  })()
+  })
 
   useEffect(() => {
     // Fetch locations list using country-state-city package
@@ -73,7 +79,7 @@ const CreateJobModel = ({
     }
   };
 
-  console.log(companies)
+  // console.log(companies)
 
   const handleStatusChange = (selectedStatuses: string[]) => {
     setStatus(selectedStatuses.join(", "));
@@ -84,12 +90,47 @@ const CreateJobModel = ({
     const link = e.target.value;
     setJobLink(link);
 
-    if (link.trim()) {
-      setIsFetching(true);
-      // Simulate API call with a 3-second delay
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      setIsFetching(false);
-      // Handle the API response here
+    try {
+      const response = await scrapeJob(jobSource, link);
+      console.log(response, "here is response");
+
+      // Map the response to the form fields
+      setNewJob({
+        ...newJob,
+        title: response.title || newJob.title,
+        company: response.company_name || newJob.company,
+        location: response.job_location || newJob.location,
+        salary: response.job_salary || newJob.salary,
+        source: response.source || newJob.source,
+      });
+    } catch (error) {
+      console.error("Error fetching job details:", error);
+    }
+  };
+
+  const handleCreateJob = async () => {
+    const formattedJobDetails = {
+      title: newJob.title?.toLowerCase(),
+      job_link: jobLink || null,
+      companyId: newJob.company_id || null,
+      job_location: newJob.location?.toLowerCase() || null,
+      job_type: newJob.jobType?.toLowerCase() || null,
+      job_salary: newJob.salary || null,
+      source: jobSource?.toLowerCase() || null,
+      posted: newJob.posted || new Date().toISOString(),
+      status: status || null
+    };
+
+    console.log(formattedJobDetails, "here")
+
+    try {
+      const response = await createJob(formattedJobDetails);
+      console.log("Response", response);
+      if(response.success){
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error creating job:", error);
     }
   };
 
@@ -132,7 +173,7 @@ const CreateJobModel = ({
                   <CommandList>
                     <CommandEmpty>No source found.</CommandEmpty>
                     <CommandGroup>
-                      {["LinkedIn", "Indeed", "Glassdoor"].map((source) => (
+                      {jobSources.map((source) => (
                         <CommandItem
                           value={source}
                           key={source}
@@ -259,7 +300,7 @@ const CreateJobModel = ({
                         key={company.id}
                         onSelect={() => {
                           setSelectedCompany(company.company_name);
-                          setNewJob({ ...newJob, company: company.company_name });
+                          setNewJob({ ...newJob, company: company.company_name, company_id: company.id });
                         }}
                         className="cursor-pointer"
                       >

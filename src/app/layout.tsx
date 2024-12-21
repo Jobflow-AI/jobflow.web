@@ -6,6 +6,7 @@ import StoreProvider from "./StoreProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { getUser } from "@/actions/user_actions";
+import { scrapeAndCreateJobs } from "@/actions/data_actions";
 
  
 const fontSans = Inter({
@@ -25,6 +26,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getUser()
+  // await scrapeAndCreateJobs()
   return (
     <html lang="en">
        <StoreProvider

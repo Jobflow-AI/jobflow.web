@@ -170,6 +170,29 @@ export const getYourJobs = async () => {
       return { success: false, error: error.message || "Unknown error" };
     }
   };
+
+  export const createJob = async (jobDetails: any) => {
+    const token = await getCookie("token");  
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/job/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `token=${token}`,
+          },
+          body: JSON.stringify(jobDetails),
+          credentials: "include",
+        }
+      );
+  
+      return await res.json();
+    } catch (error: any) {
+      console.error("Error in applyJob:", error);
+      return { success: false, error: error.message || "Unknown error" };
+    }
+  };
   
   
   export const updateJobStatus = async (jobId: string, status: string) => {

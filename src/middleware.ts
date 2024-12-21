@@ -9,9 +9,9 @@ export async function middleware(request: NextRequest) {
 
   const isRootPath = path === "/";
 
-  if (!token && !isRootPath) {
-    return new NextResponse("Access Denied: The Website is under construction", { status: 403 });
-  }
+  // if (!token && !isRootPath) {
+  //   return new NextResponse("Access Denied: The Website is under construction", { status: 403 });
+  // }
 
   return NextResponse.next();
 }

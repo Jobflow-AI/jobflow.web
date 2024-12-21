@@ -34,7 +34,6 @@ export default function TrackerBoard() {
     }, {})
   );
 
-  console.log(tasks, "here")
 
   const [columnNames, setColumnNames] = useState<string[]>(Object?.keys(tasks));
   const [columnInputValues, setColumnInputValues] = useState<string[]>(columnNames);
@@ -72,11 +71,7 @@ export default function TrackerBoard() {
   
   useEffect(() => {
     fetchJobs();
-  }, []);
-
-  const handleCreateJob = async() => {
-    console.log("creating job")
-  }
+  }, []); 
 
   const handleAddColumn = () => {
     const newColumnName = `new-column-${columnNames.length + 1}`;
@@ -100,7 +95,6 @@ export default function TrackerBoard() {
     const taskKeys = Object.keys(updatedTasks);
 
     // Call updateUser action with task keys
-    console.log(taskKeys, "here are updated task keys");
     updateUser({"job_statuses": taskKeys})
       .then(response => {
         if (response.success) {
@@ -140,7 +134,6 @@ export default function TrackerBoard() {
     setColumnNames(updatedColumnNames);
     setColumnInputValues(updatedColumnInputValues);
 
-    console.log(updatedColumnNames, "here")
     // Update userData with the new column names
     updateUser({ "job_statuses": updatedColumnNames })
         .then(response => {
@@ -168,7 +161,6 @@ export default function TrackerBoard() {
     // If the source and destination are the same, return
     if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
-    console.log(source.draggableId, "here droppaleId", destination.droppableId)
 
     // Get the source and destination lists
     const sourceList = [...tasks[source.droppableId as keyof Tasks]];
@@ -289,7 +281,6 @@ export default function TrackerBoard() {
           newJob={newJob} 
           setNewJob={setNewJob} 
           setIsModalOpen={setIsModalOpen} 
-          handleCreateJob={handleCreateJob} 
           defaultStatus={currentColumnName}
         />
       )}

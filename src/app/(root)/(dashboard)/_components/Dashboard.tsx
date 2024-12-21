@@ -66,6 +66,7 @@ export default function Dashboard() {
 
   useEffect(() => {
   ( async () => {
+    console.log(appliedJobId, "here is jobsid")
     if(appliedJobId) {
       const data = await getJobById(appliedJobId)
       setAppliedJob(data?.job)

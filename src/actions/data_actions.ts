@@ -1,5 +1,5 @@
 
-export const scrapeData = async() => {
+export const scrapeAndCreateJobs = async() => {
     try {
       console.log("inside scrapte")
       const res = await fetch(
@@ -62,6 +62,7 @@ export const getJobData = async(page=1, portal='', title='') => {
 }
 
 export const getJobById = async(jobId: string) => {
+   console.log(jobId, "here")
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/job/get/id?jobId=${jobId}`,
@@ -75,6 +76,33 @@ export const getJobById = async(jobId: string) => {
           next: {
             tags: ["jobData"],
           },
+        }
+      );
+  
+      const data = await res.json();
+  
+      return data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Error in fetching job data: ${error.message}`);
+      } else {
+        throw new Error(
+          "An unknown error occurred while fetching job data"
+        );
+      }
+    }
+}
+
+export const scrapeJob = async(portal: string, url: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/job/scrape?portal=${portal}&url=${url}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
         }
       );
   
