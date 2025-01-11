@@ -1,7 +1,8 @@
+import { IUser } from "@/components/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserProps {
-  user: any;
+  user: IUser | null;
 }
 
 const initialState: UserProps = {

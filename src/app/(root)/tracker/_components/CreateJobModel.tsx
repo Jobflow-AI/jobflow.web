@@ -247,14 +247,14 @@ const CreateJobModel = ({
                 <CommandList>
                   <CommandEmpty>No status found.</CommandEmpty>
                   <CommandGroup>
-                    {user.job_statuses.map((statusOption: string) => (
+                    {user && user.job_statuses.map((statusOption) => (
                       <CommandItem
-                        value={statusOption}
-                        key={statusOption}
-                        onSelect={() => handleStatusChange([statusOption])}
+                        value={statusOption.label}
+                        key={statusOption.label}
+                        onSelect={() => handleStatusChange([statusOption.label])}
                         className="cursor-pointer"
                       >
-                        {statusOption}
+                        {statusOption.label}
                       </CommandItem>
                     ))}
                   </CommandGroup>

@@ -1,7 +1,11 @@
 'use client';
+import { useAppSelector } from '@/redux/hooks';
 import React from 'react';
 
 const Profile = () => {
+
+  const user = useAppSelector(state => state.user.user)
+
   return (
     <div className="min-h-screen lg:w-3/4 w-full p-6 mt-9">
       <div className="mx-auto">
@@ -19,9 +23,9 @@ const Profile = () => {
           <div className='w-[75%]'>
           {/* User Info */}
           <div className="flex-1">
-            <h2 className="text-2xl font-semibold text-gray-800">Ahmed Ali Hussain</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">{user?.name}</h2>
             <p className="text-gray-500">
-              Male | Elshiekh Zayed, Giza | Accountant | 12 Dec 1992 (38 years)
+              {user?.email}
             </p>
             {/* <div className="flex space-x-4 mt-2">
               <div className="bg-red-100 text-red-600 px-3 py-1 rounded-md">Alcohol</div>
@@ -31,16 +35,11 @@ const Profile = () => {
 
           {/* Health Stats */}
           <div className="grid grid-cols-4 p-3 mt-5 w-[70%]  gap-2">
-            {[
-              { label: 'Applied Jobs', value: '22.4', trend: '▲ 10' },
-              { label: 'Rejected', value: '92 kg', trend: '▼ 10 kg' },
-              { label: 'Revert Back', value: '175 cm' },
-              { label: 'Not shortlisted', value: '124/80', trend: '▲ 10' },
-            ].map((stat, idx) => (
+            {user?.job_statuses?.map((stat, idx) => (
               <div key={idx} className="text-center border border-x-2 rounded-md">
                 <p className="text-gray-500">{stat.label}</p>
                 <p className="text-lg font-semibold text-gray-800">{stat.value}</p>
-                {stat.trend && (
+                {/* {stat.trend && (
                   <p
                     className={`text-sm ${
                       stat.trend.startsWith('▲') ? 'text-red-600' : 'text-green-600'
@@ -48,7 +47,7 @@ const Profile = () => {
                   >
                     {stat.trend}
                   </p>
-                )}
+                )} */}
               </div>
             ))}
           </div>

@@ -28,10 +28,10 @@ export const renderJobCard = (job: any, setAppliedJobId?: any, viewMode?: boolea
               )}
               <div>
                 <CardTitle className="text-lg font-bold">
-                  {job.company?.company_name || "No Company Name"}
+                  {job?.title || "No Company Name"}
                 </CardTitle>
                 <CardDescription className="text-sm text-gray-500">
-                  {job.title || "No Title"}
+                  {job?.company?.company_name || "No Title"}
                 </CardDescription>
               </div>
             </div>
