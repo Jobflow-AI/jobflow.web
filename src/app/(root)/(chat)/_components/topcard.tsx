@@ -8,7 +8,7 @@ interface TopicCardProps {
   subtitle: string
 }
 
-export default function TopicCard({ icon, title, subtitle }: TopicCardProps) {
+export default function TopicCard() {
   return (
     <div className="max-w-[70%] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
     <Card className="p-4 hover:shadow-lg transition-shadow">
