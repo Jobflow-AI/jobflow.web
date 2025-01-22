@@ -17,7 +17,7 @@ const AppliedJobsModal = ({ jobs }: { jobs: any[] }) => {
   }, [jobs]);
 
   const handleApply = async (jobId: string) => {
-    const data = await applyJob(jobId); // Pass jobId here
+    const data = await applyJob(jobId, "applied"); // Pass jobId here
     console.log(data, "here is data");
     if (data.success) {
       toast.success(data?.message || "Job added to tracker");

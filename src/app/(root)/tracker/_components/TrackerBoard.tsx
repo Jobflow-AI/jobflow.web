@@ -74,7 +74,7 @@ export default function TrackerBoard() {
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [isModalOpen]);
 
   const handleAddColumn = () => {
     const newColumnName = `new-column-${columnNames.length + 1}`;
@@ -145,7 +145,8 @@ export default function TrackerBoard() {
         toast.error("Error updating user data");
       });
   };
-  console.log(tasks, "here outside tasks");
+
+  // console.log(tasks, "here outside tasks");
 
 
   const onDragEnd = async (result: any) => {
@@ -240,8 +241,9 @@ export default function TrackerBoard() {
                         </button>
                       </div>
                     )}
-                    {tasks[listName]?.map((job: Job, index: number) => (
-                      <Draggable draggableId={job.id} index={index} key={job.id}>
+                    {tasks[listName]?.map((job: Job, index: number) => {
+                      console.log(job, "here is job inside map")
+                      return<Draggable draggableId={job.id} index={index} key={job.id}>
                         {(provided) => (
                           <div
                             {...provided.draggableProps}
@@ -249,11 +251,11 @@ export default function TrackerBoard() {
                             ref={provided.innerRef}
                             className="my-3"
                           >
-                            {renderJobCard(job.job, "", true)}
+                            {renderJobCard(job, "", true)}
                           </div>
                         )}
                       </Draggable>
-                    ))}
+})}
                     {provided.placeholder}
                   </div>
                 )}
