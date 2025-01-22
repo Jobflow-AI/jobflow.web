@@ -216,8 +216,8 @@ const CreateJobModel = ({
           </label>
           <Input
             type="text"
-            value={newJob.title || ""}
-            onChange={(e) => setNewJob({ ...newJob, eventName: e.target.value })}
+            value={newJob.title}
+            onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
             className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             placeholder="Enter Job Title"
           />

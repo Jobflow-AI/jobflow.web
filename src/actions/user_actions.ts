@@ -149,11 +149,11 @@ export const getYourJobs = async () => {
   };
 
 
-  export const applyJob = async (jobId: string) => {
+  export const applyJob = async (jobId: string, status: string) => {
     const token = await getCookie("token");  
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/job/apply?jobId=${jobId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/job/track?jobId=${jobId}&status=${status}`,
         {
           method: "POST",
           headers: {
