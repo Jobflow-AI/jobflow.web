@@ -113,6 +113,9 @@ const CreateJobModel = ({
       title: newJob.title?.toLowerCase(),
       job_link: jobLink || null,
       companyId: newJob.company_id || null,
+      company_name: newJob.newCompanyName?.toLowerCase() || null,
+      company_logo: newJob.companyLogo || null,
+      company_description: newJob.companyDescription?.toLowerCase() || null,
       job_location: newJob.location?.toLowerCase() || null,
       job_type: newJob.jobType?.toLowerCase() || null,
       job_salary: newJob.salary || null,
@@ -120,9 +123,6 @@ const CreateJobModel = ({
       posted: newJob.posted || new Date().toISOString(),
       status: status || null
     };
-
-    console.log(formattedJobDetails, "here")
-
     try {
       const response = await createJob(formattedJobDetails);
       console.log("Response", response);
