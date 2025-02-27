@@ -25,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getUser()
-  // await scrapeAndCreateJobs()
+ //  await scrapeAndCreateJobs()
   return (
     <html lang="en">
        <StoreProvider

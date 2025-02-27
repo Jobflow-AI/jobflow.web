@@ -27,7 +27,6 @@ export const scrapeAndCreateJobs = async() => {
     }
 }
 
-
 export const getJobData = async(page=1, portal='', title='') => {
     try {
       const res = await fetch(
