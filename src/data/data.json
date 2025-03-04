@@ -1,0 +1,207 @@
+{
+    "jobs": [
+      {
+        "id": 1,
+        "name": "Frontend Developer",
+        "description": "Frontend jobs across India..."
+      },
+      {
+        "id": 2,
+        "name": "Backend Developer",
+        "description": "Jobs across Bangalore starting at 800k..."
+      },
+      {
+        "id": 3,
+        "name": "Full Stack Developer",
+        "description": "Exciting roles for full stack devs with React and Node.js."
+      }
+    ],
+    "exampleCard" : [
+        {
+            "title": "General Job Search",
+            "prompt": "Find the latest [job title] openings on LinkedIn, Indeed, and Glassdoor, remote."
+          },
+          {
+            "title": "Tech Industry Jobs",
+            "prompt": "Jobs on LinkedIn, Stack Overflow Jobs, and AngelList , remote, Fresher."
+          },
+          {
+            "title": "Startup & Remote Jobs",
+            "prompt": "Find remote [job title] positions."
+          }
+    ],
+        "companies": [
+          {
+            "name": "TechNova Solutions",
+            "description": "TechNova Solutions is a leading AI-driven software company specializing in cloud-based applications and automation.",
+            "recruiter": "John Doe",
+            "applyKey": "TECHNOVA123",
+            "role": "Software Engineer",
+            "responsibilities": [
+              "Develop scalable web applications using React and Node.js",
+              "Collaborate with cross-functional teams to design and implement new features",
+              "Write clean, maintainable, and efficient code"
+            ],
+            "skills": ["JavaScript", "React", "Node.js", "REST APIs"],
+            "compensation": "$90,000 - $110,000 per year",
+            "location": "Remote",
+            "logo": "https://example.com/technova-logo.png",
+            "applyLink": "https://technova.com/careers/software-engineer"
+          },
+          {
+            "name": "FinTech Pro",
+            "description": "FinTech Pro revolutionizes the finance industry with secure and efficient digital payment solutions.",
+            "recruiter": "Sarah Johnson",
+            "applyKey": "FINTECH456",
+            "role": "Data Analyst",
+            "responsibilities": [
+              "Analyze large datasets to extract meaningful insights",
+              "Develop dashboards and reports using Power BI",
+              "Collaborate with the engineering team to optimize data pipelines"
+            ],
+            "skills": ["SQL", "Python", "Power BI", "Data Visualization"],
+            "compensation": "$80,000 - $100,000 per year",
+            "location": "New York, NY",
+            "logo": "https://example.com/fintechpro-logo.png",
+            "applyLink": "https://fintechpro.com/jobs/data-analyst"
+          },
+          {
+            "name": "GreenEnergy Corp",
+            "description": "GreenEnergy Corp develops renewable energy solutions to drive a sustainable future.",
+            "recruiter": "Michael Brown",
+            "applyKey": "GREEN789",
+            "role": "Sustainability Consultant",
+            "responsibilities": [
+              "Assess energy efficiency and sustainability programs",
+              "Develop strategies to improve renewable energy adoption",
+              "Work with clients to implement sustainable practices"
+            ],
+            "skills": ["Sustainability", "Environmental Science", "Energy Efficiency"],
+            "compensation": "$85,000 - $105,000 per year",
+            "location": "San Francisco, CA",
+            "logo": "https://example.com/greenenergy-logo.png",
+            "applyLink": "https://greenenergy.com/careers/consultant"
+          },
+          {
+            "name": "CyberShield Security",
+            "description": "CyberShield Security provides cutting-edge cybersecurity solutions to protect businesses from digital threats.",
+            "recruiter": "Emma Davis",
+            "applyKey": "CYBERSEC321",
+            "role": "Cybersecurity Analyst",
+            "responsibilities": [
+              "Monitor network traffic for security threats",
+              "Perform security audits and penetration testing",
+              "Develop and implement security policies"
+            ],
+            "skills": ["Cybersecurity", "Network Security", "Penetration Testing"],
+            "compensation": "$95,000 - $120,000 per year",
+            "location": "Remote",
+            "logo": "https://example.com/cybershield-logo.png",
+            "applyLink": "https://cybershield.com/jobs/cybersecurity-analyst"
+          },
+          {
+            "name": "MediCare Solutions",
+            "description": "MediCare Solutions develops advanced healthcare management software for hospitals and clinics.",
+            "recruiter": "Olivia Wilson",
+            "applyKey": "MEDICARE654",
+            "role": "Full Stack Developer",
+            "responsibilities": [
+              "Build and maintain healthcare management applications",
+              "Integrate software with electronic health records (EHR) systems",
+              "Ensure application security and compliance with regulations"
+            ],
+            "skills": ["Java", "Spring Boot", "React", "SQL"],
+            "compensation": "$100,000 - $125,000 per year",
+            "location": "Chicago, IL",
+            "logo": "https://example.com/medicare-logo.png",
+            "applyLink": "https://medicare.com/careers/full-stack-developer"
+          },
+          {
+            "name": "EduTech Innovations",
+            "description": "EduTech Innovations creates interactive learning platforms for schools and universities.",
+            "recruiter": "William Johnson",
+            "applyKey": "EDUTECH876",
+            "role": "UI/UX Designer",
+            "responsibilities": [
+              "Design intuitive user interfaces for e-learning platforms",
+              "Conduct user research and usability testing",
+              "Collaborate with developers to implement designs"
+            ],
+            "skills": ["Figma", "Adobe XD", "User Research", "Prototyping"],
+            "compensation": "$85,000 - $100,000 per year",
+            "location": "Remote",
+            "logo": "https://example.com/edutech-logo.png",
+            "applyLink": "https://edutech.com/jobs/ui-ux-designer"
+          },
+          {
+            "name": "AutoTech AI",
+            "description": "AutoTech AI pioneers autonomous vehicle technology and smart transportation solutions.",
+            "recruiter": "James Anderson",
+            "applyKey": "AUTOTECH543",
+            "role": "Machine Learning Engineer",
+            "responsibilities": [
+              "Develop AI models for autonomous driving",
+              "Train and optimize deep learning algorithms",
+              "Collaborate with robotics engineers for real-world deployment"
+            ],
+            "skills": ["Python", "TensorFlow", "Computer Vision", "Deep Learning"],
+            "compensation": "$120,000 - $150,000 per year",
+            "location": "San Diego, CA",
+            "logo": "https://example.com/autotech-logo.png",
+            "applyLink": "https://autotech.com/jobs/ml-engineer"
+          },
+          {
+            "name": "CloudScape Technologies",
+            "description": "CloudScape Technologies provides enterprise cloud computing solutions.",
+            "recruiter": "Sophia Martinez",
+            "applyKey": "CLOUDSCAPE098",
+            "role": "DevOps Engineer",
+            "responsibilities": [
+              "Automate infrastructure and CI/CD pipelines",
+              "Monitor and optimize cloud resources",
+              "Ensure high availability and security of cloud services"
+            ],
+            "skills": ["AWS", "Docker", "Kubernetes", "CI/CD"],
+            "compensation": "$110,000 - $130,000 per year",
+            "location": "Seattle, WA",
+            "logo": "https://example.com/cloudscape-logo.png",
+            "applyLink": "https://cloudscape.com/jobs/devops-engineer"
+          },
+          {
+            "name": "RetailTech AI",
+            "description": "RetailTech AI enhances the shopping experience with AI-powered recommendations.",
+            "recruiter": "Liam Thompson",
+            "applyKey": "RETAILTECH777",
+            "role": "Product Manager",
+            "responsibilities": [
+              "Define product strategy and roadmap",
+              "Work with engineering teams to deliver AI-driven features",
+              "Analyze market trends and customer feedback"
+            ],
+            "skills": ["Product Management", "Agile", "AI", "User Research"],
+            "compensation": "$130,000 - $160,000 per year",
+            "location": "Boston, MA",
+            "logo": "https://example.com/retailtech-logo.png",
+            "applyLink": "https://retailtech.com/careers/product-manager"
+          },
+          {
+            "name": "TravelEase Inc.",
+            "description": "TravelEase Inc. creates AI-driven travel planning solutions for seamless vacations.",
+            "recruiter": "Emily White",
+            "applyKey": "TRAVELEASE555",
+            "role": "Backend Developer",
+            "responsibilities": [
+              "Develop and maintain REST APIs for travel booking services",
+              "Optimize database performance and scalability",
+              "Ensure security and reliability of backend systems"
+            ],
+            "skills": ["Node.js", "MongoDB", "GraphQL", "Redis"],
+            "compensation": "$95,000 - $120,000 per year",
+            "location": "Austin, TX",
+            "logo": "https://example.com/travelease-logo.png",
+            "applyLink": "https://travelease.com/jobs/backend-developer"
+          }
+        ]
+      
+  }
+  
