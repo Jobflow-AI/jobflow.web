@@ -13,7 +13,7 @@ export default function Layout({ children }: ChatLayoutProps) {
       {/* Sidebar or Chat List */}
         <Sidebar />
       {/* Chat Window */}
-      <main className="w-full">
+      <main className="w-full overflow-hidden">
         {children}
       </main>
     </div>

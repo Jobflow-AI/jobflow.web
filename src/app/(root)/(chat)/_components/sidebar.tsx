@@ -8,7 +8,7 @@ import Data from "../../../../data/data.json"
 
 const sidebar = () => {
   return (
-    <div className="w-90 bg-zinc-900 rounded-l-3xl flex flex-col">
+    <div className="w-90 bg-zinc-900 rounded-3xl flex flex-col">
           {/* My Chats header */}
           <div className="p-4">
             <div className="bg-zinc-800 rounded-full p-3 flex justify-between items-center">
