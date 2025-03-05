@@ -20,7 +20,7 @@ export default function Home() {
           <ChatHeader />
           <div className="flex items-center justify-center p-4">
           <div className="w-full max-w-7xl">
-           {!isSearchSubmitted ? <InitialCard onSubmit={handleSearchSubmit} /> : <JobSearchResults query={searchQuery} />}
+           { !isSearchSubmitted ? <InitialCard onSubmit={handleSearchSubmit} /> : <JobSearchResults query={searchQuery} /> }
          </div>
          </div>
 

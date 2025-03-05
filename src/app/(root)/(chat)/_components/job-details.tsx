@@ -1,9 +1,10 @@
 "use client"
 
 import type React from "react"
-
+import { useContext, useEffect } from "react"
 import { motion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
+import { ApplyPanelContext } from "../layout"
 
 interface Job {
   name: string
@@ -24,6 +25,8 @@ interface JobDetailProps {
 }
 
 const JobDetail: React.FC<JobDetailProps> = ({ job }) => {
+  const { setIsApplyPanelOpen } = useContext(ApplyPanelContext);
+  
   // Animation variants
   const detailVariants = {
     hidden: { opacity: 0 },
@@ -98,14 +101,12 @@ const JobDetail: React.FC<JobDetailProps> = ({ job }) => {
       </div>
 
       <div className="mt-8">
-        <a
-          href={job.applyLink}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => setIsApplyPanelOpen(true)}
           className="bg-[#b9ff2c] text-zinc-800 font-medium px-6 py-3 rounded-lg inline-flex items-center hover:bg-opacity-90 transition-colors"
         >
           Apply Now <ArrowUpRight className="ml-2 w-4 h-4" />
-        </a>
+        </button>
       </div>
     </motion.div>
   )
