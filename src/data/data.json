@@ -1,19 +1,89 @@
 {
     "jobs": [
       {
-        "id": 1,
-        "name": "Frontend Developer",
-        "description": "Frontend jobs across India..."
-      },
-      {
-        "id": 2,
-        "name": "Backend Developer",
-        "description": "Jobs across Bangalore starting at 800k..."
-      },
-      {
-        "id": 3,
-        "name": "Full Stack Developer",
-        "description": "Exciting roles for full stack devs with React and Node.js."
+        "today": [
+          {
+            "id": 1,
+            "name": "Frontend Developer Remote frontend position with React expertise",
+            "description": "Remote frontend position with React expertise",
+            "compensation": "$90,000 - $120,000",
+            "postedDate": "2024-01-17"
+          },
+          {
+            "id": 2,
+            "name": "Frontend Engineer 100% remote",
+            "description": "100% remote frontend role with modern tech stack",
+            "compensation": "$95,000 - $130,000",
+            "postedDate": "2024-01-17"
+          }
+        ],
+        "yesterday": [
+          {
+            "id": 3,
+            "name": "Frontend Developer Remote",
+            "description": "Remote frontend position for startup",
+            "compensation": "$85,000 - $110,000",
+            "postedDate": "2024-01-16"
+          },
+          {
+            "id": 4,
+            "name": "Frontend UI Developer $92,000 - $125,000",
+            "description": "Remote frontend role with focus on UI/UX",
+            "compensation": "$92,000 - $125,000",
+            "postedDate": "2024-01-16"
+          },
+          {
+            "id": 5,
+            "name": "Senior Frontend Developer $120,000 - $150,000",
+            "description": "Remote frontend leadership position",
+            "compensation": "$120,000 - $150,000",
+            "postedDate": "2024-01-16"
+          },
+          {
+            "id": 6,
+            "name": "Frontend Application Developer remote",
+            "description": "Remote frontend role for enterprise applications",
+            "compensation": "$100,000 - $135,000",
+            "postedDate": "2024-01-16"
+          }
+        ],
+        "lastWeek": [
+          {
+            "id": 7,
+            "name": "Frontend Developer",
+            "description": "Remote frontend position with flexible hours",
+            "compensation": "$88,000 - $115,000",
+            "postedDate": "2024-01-10"
+          },
+          {
+            "id": 8,
+            "name": "Frontend React Developer specializing in React",
+            "description": "Remote frontend role specializing in React",
+            "compensation": "$95,000 - $125,000",
+            "postedDate": "2024-01-11"
+          },
+          {
+            "id": 9,
+            "name": "Frontend Web Developer $90,000 - $120,000",
+            "description": "Remote frontend position for web applications",
+            "compensation": "$90,000 - $120,000",
+            "postedDate": "2024-01-12"
+          },
+          {
+            "id": 10,
+            "name": "Frontend JavaScript Developer",
+            "description": "Remote frontend role with JavaScript focus",
+            "compensation": "$93,000 - $128,000",
+            "postedDate": "2024-01-13"
+          },
+          {
+            "id": 11,
+            "name": "Frontend Vue Developer",
+            "description": "Remote frontend position with Vue.js expertise",
+            "compensation": "$92,000 - $122,000",
+            "postedDate": "2024-01-13"
+          }
+        ]
       }
     ],
     "exampleCard" : [

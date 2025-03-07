@@ -1,23 +1,23 @@
 import React from 'react'
 import { ChevronLeft, Bookmark, Share } from 'lucide-react'
+import CustomButton from '@/components/ui/custombutton'
+import logo from "../../../../../public/logo.png"
 
 const chatHeader = () => {
   return (
-    <div className="flex items-center justify-between p-4 border-b border-zinc-800">
+    <div className="flex items-center justify-between py-2 px-4">
     <div className="flex items-center gap-2">
-      <button className="text-zinc-400">
-        <ChevronLeft className="w-5 h-5" />
-      </button>
-      <span className="text-white">Name chat</span>
-      <span className="bg-zinc-800 text-xs text-zinc-400 px-2 py-0.5 rounded-md">Chat GPT 4.0</span>
+      <span className="text-white text-lg font-medium">Name chat</span>
     </div>
     <div className="flex items-center gap-4">
-      <button className="text-zinc-400">
-        <Bookmark className="w-5 h-5" />
-      </button>
-      <button className="text-zinc-400">
-        <Share className="w-5 h-5" />
-      </button>
+    <div className="mt-auto px-4 pb-4">
+      <CustomButton
+        icon={logo.src}
+        text="Explore Tracker"
+        className="text-sm font-semibold cursor-pointer"
+        iconclass='w-6 h-6 p-[1px]'
+      />
+      </div>
     </div>
   </div>
   )

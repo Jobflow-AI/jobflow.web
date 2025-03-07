@@ -82,3 +82,7 @@
     background-size: contain;
   }
 }
+.icon-xl-heavy path {
+  stroke-width: 1px !important;
+  stroke: white; /* Change color if needed */
+}
