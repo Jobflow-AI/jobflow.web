@@ -34,8 +34,8 @@ const JobSearchResults: React.FC<JobSearchResultsProps> = ({ query }) => {
       variants={containerVariants}
     >
       <div className="p-4 bg-zinc-700">
-        <h2 className="text-white text-xl font-medium">
-          Job Results for: <span className="text-[#b9ff2c]">{query}</span>
+        <h2 className="text-white text-md font-medium">
+          Job Results for : <span className="text-[#b9ff2c]">{query}</span>
         </h2>
       </div>
 

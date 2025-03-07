@@ -5,6 +5,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { Mic, ArrowRight } from "lucide-react"
 import Hand from "../../../../../public/hey.png"
+import Hnadanimation from "../../../../../public/handanimation-unscreen.gif"
 
 interface InitialCardProps {
   onSubmit: (query: string) => void
@@ -21,9 +22,9 @@ const InitialCard: React.FC<InitialCardProps> = ({ onSubmit }) => {
   }
 
   return (
-    <div className="flex-1 overflow-auto p-4 flex items-center justify-center">
-      <div className="max-w-2xl w-full bg-zinc-800 rounded-xl p-8 flex flex-col items-center">
-        <Image src={Hand || "/placeholder.svg"} alt="hand" className="w-[20%]" />
+    <div className="flex-1 mt-[10%] overflow-auto p-4 flex items-center justify-center">
+      <div className="max-w-2xl w-full shadow-[5px_0_20px_rgba(82,82,82,0.5)] bg-zinc-900 rounded-xl p-8 flex flex-col items-center">
+        <Image src={Hnadanimation || "/placeholder.svg"} alt="hand" className="w-[30%]" />
         <h1 className="text-white text-3xl font-medium mb-2">Hunting Job Opportunity?</h1>
         <p className="text-zinc-400 text-center text-sm mb-8">
           🚀 Welcome! Simply enter a few details like job preferences, and let AI generate the perfect job listings for
