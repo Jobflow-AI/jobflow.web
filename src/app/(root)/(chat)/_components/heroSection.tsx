@@ -8,7 +8,98 @@ import { FaPaperclip, FaUpload, FaGlobe, FaBars, FaTwitter, FaLinkedin, FaGithub
 const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-[#160e0e] text-white flex flex-col">
-      {/* Navbar */}
+      {/* Ray Container - Top */}
+      <div 
+        className="fixed inset-0 pointer-events-none select-none"
+        style={{
+          '--gradient-opacity': '.85',
+          '--ray-gradient': 'radial-gradient(rgb(83 255 233 / 85%) 0%, rgba(43, 166, 255, 0) 100%), radial-gradient(rgb(83 255 233 / 85%) 0%, rgba(43, 166, 255, 0) 100%)',
+          transition: 'opacity 0.25s linear',
+        } as React.CSSProperties}
+      />
+
+      {/* Ray Container with multiple light rays */}
+        <div 
+          className="fixed inset-0 pointer-events-none select-none"
+          style={{
+            '--gradient-opacity': '.85',
+            '--ray-gradient': 'radial-gradient(rgba(83, 196, 255, var(--gradient-opacity)) 0%, rgba(43, 166, 255, 0) 100%)',
+            transition: 'opacity 0.25s linear',
+          } as React.CSSProperties}
+        >
+          {/* Light Ray 1 */}
+          <div className="absolute rounded-full" 
+            style={{
+              background: 'var(--ray-gradient)',
+              width: '480px',
+              height: '680px',
+              transform: 'rotate(80deg)',
+              top: '-540px',
+              left: '250px',
+              filter: 'blur(110px)'
+            }}
+          />
+          {/* Light Ray 2 */}
+          <div className="absolute rounded-full" 
+            style={{
+              background: 'var(--ray-gradient)',
+              width: '110px',
+              height: '400px',
+              transform: 'rotate(-20deg)',
+              top: '-280px',
+              left: '350px',
+              mixBlendMode: 'overlay',
+              opacity: '0.6',
+              filter: 'blur(60px)'
+            }}
+          />
+          {/* Light Ray 3 */}
+          <div className="absolute rounded-full" 
+            style={{
+              background: 'var(--ray-gradient)',
+              width: '400px',
+              height: '370px',
+              transform: 'rotate(95deg)',
+              top: '-350px',
+              left: '200px',
+              mixBlendMode: 'overlay',
+              opacity: '0.6',
+              filter: 'blur(21px)'
+            }}
+          />
+          {/* Light Ray 4 */}
+          <div className="absolute rounded-full" 
+            style={{
+              background: 'var(--ray-gradient)',
+              position: 'absolute',
+              width: '330px',
+              height: '370px',
+              transform: 'rotate(75deg)',
+              top: '-330px',
+              left: '50px',
+              mixBlendMode: 'overlay',
+              opacity: '0.5',
+              filter: 'blur(21px)'
+            }}
+          />
+          {/* Light Ray 5 */}
+          <div className="absolute rounded-full" 
+            style={{
+              background: 'var(--ray-gradient)',
+              position: 'absolute',
+              width: '110px',
+              height: '400px',
+              transform: 'rotate(-40deg)',
+              top: '-280px',
+              left: '-10px',
+              mixBlendMode: 'overlay',
+              opacity: '0.8',
+              filter: 'blur(60px)'
+            }}
+          />
+        </div>
+
+        {/* Navbar */}
       <div className="flex justify-between items-center w-full mx-auto px-6 py-4">
         <div className="flex items-center">
           <Image src='/logo.png' alt="Lovable Logo" width={35} height={45} className='rounded-lg'/>
