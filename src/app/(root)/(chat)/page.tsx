@@ -1,31 +1,23 @@
 "use client"
-import { Folder, Search, Plus, Bookmark, MessageSquare, ChevronLeft, Share, Mic } from "lucide-react"
-import ChatHeader from "./_components/chatHeader"
-import JobSearchResults from "./_components/job-result"
-import InitialCard from "./_components/InitialCrd"
-import { useState } from "react"
+import React from 'react';
+import Navbar from './_components/Navbar';
+import HeroSection from './_components/heroSection';
+import FeatureSection from './_components/featureSection';
+import Sidebar from './_components/sidebar';
+import ChatLayout from './layout';
+import { useAppSelector } from '@/redux/hooks';
 
-export default function Home() {
-  const [isSearchSubmitted, setIsSearchSubmitted] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
+export default function LandingPage() {
+  const user = useAppSelector(state => state.user.user); // Use selector to get user
+  const isLoggedIn = !!user; // Determine if user is logged in
 
-  const handleSearchSubmit = (query: string) => {
-    setSearchQuery(query)
-    setIsSearchSubmitted(true)
-  }
   return (
-    <div className="h-full rounded-3xl overflow-hidden flex">
-        <div className="flex-1 w-full flex flex-col">
-          {/* Header */}
-          <ChatHeader />
-          <div className="flex items-center justify-center p-4">
-          <div className="w-full max-w-7xl">
-           { !isSearchSubmitted ? <InitialCard onSubmit={handleSearchSubmit} /> : <JobSearchResults query={searchQuery} /> }
-         </div>
-         </div>
+    <div className="min-h-screen bg-black text-white overflow-auto">
+      {/* Hero Section with Sidebar */}
+      <HeroSection isLoggedIn={isLoggedIn} />
 
-        </div>
-      </div>
-  )
+      {/* Feature Section - Only for logged-out users */}
+      {!isLoggedIn && <FeatureSection />}
+    </div>
+  );
 }
-

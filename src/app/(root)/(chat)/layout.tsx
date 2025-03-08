@@ -27,7 +27,7 @@ export default function Layout({ children }: ChatLayoutProps) {
     }}>
       <div className="flex gap-2 h-screen w-full bg-black p-4">
         {/* Sidebar or Chat List */}
-        <Sidebar />
+        {/* <Sidebar /> */}
         
         {/* Main content area with flexible layout */}
         <div className="flex w-full overflow-hidden">
