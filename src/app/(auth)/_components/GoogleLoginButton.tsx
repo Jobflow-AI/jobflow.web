@@ -3,18 +3,12 @@
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { useGoogleLogin } from "@react-oauth/google";
-// import { getUser } from "@/actions/user_actions";
-
-
-
-
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
 
 const GoogleLoginButton = ({ className = "" }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +32,6 @@ const GoogleLoginButton = ({ className = "" }) => {
             },
           }
         );
-
 
         dispatch(userData(res.data.user));
 
@@ -66,13 +59,13 @@ const GoogleLoginButton = ({ className = "" }) => {
     <button
       type="button"
       onClick={() => login()}
-      className={`flex items-center justify-center w-full h-12 border border-gray-300 rounded-md hover:shadow-md transition-shadow ${
-        isLoading ? "cursor-not-allowed bg-gray-100" : "bg-white"
+      className={`flex items-center justify-center w-full h-12 border border-gray-600 rounded-md hover:shadow-md transition-shadow ${
+        isLoading ? "cursor-not-allowed bg-gray-700" : "bg-gray-800"
       } ${className}`}
       disabled={isLoading}
     >
       {isLoading ? (
-        <Loader2 className="w-5 h-5 animate-spin" />
+        <Loader2 className="w-5 h-5 animate-spin text-white" />
       ) : (
         <div className="flex items-center gap-2">
           <Image
@@ -81,7 +74,7 @@ const GoogleLoginButton = ({ className = "" }) => {
             width={20}
             height={20}
           />
-          <span className="text-gray-700 font-medium">Sign in with Google</span>
+          <span className="text-white font-medium">Sign in with Google</span>
         </div>
       )}
     </button>
