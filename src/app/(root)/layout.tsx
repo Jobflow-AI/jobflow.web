@@ -19,6 +19,7 @@ export default async function MainLayout({
     <>
         {/* <Navbar user={data?.user}/> */}
         <div className="flex flex-wrap items-center justify-center">
+          <Navbar user={data.user}/>
           {children}
         </div>
     </>

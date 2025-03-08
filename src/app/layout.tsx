@@ -35,7 +35,7 @@ export default async function RootLayout({
             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
           >
       <body className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased dark",
           fontSans.variable
         )}>
           <Toaster />

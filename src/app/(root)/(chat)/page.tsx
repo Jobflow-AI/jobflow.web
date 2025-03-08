@@ -12,7 +12,7 @@ export default function LandingPage() {
   const isLoggedIn = !!user; // Determine if user is logged in
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-auto">
+    <div className="min-h-screen overflow-auto">
       {/* Hero Section with Sidebar */}
       <HeroSection isLoggedIn={isLoggedIn} />
 

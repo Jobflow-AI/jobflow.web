@@ -32,25 +32,25 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --background: 0 0% 0%; /* Change background to black */
+    --foreground: 210 40% 98%; /* Adjust foreground color */
+    --card: 0 0% 0%; /* Change card background to black */
+    --card-foreground: 210 40% 98%; /* Adjust card foreground color */
+    --popover: 0 0% 0%; /* Change popover background to black */
+    --popover-foreground: 210 40% 98%; /* Adjust popover foreground color */
+    --primary: 210 40% 98%; /* Adjust primary color */
+    --primary-foreground: 222.2 47.4% 11.2%; /* Adjust primary foreground color */
+    --secondary: 217.2 32.6% 17.5%; /* Adjust secondary color */
+    --secondary-foreground: 210 40% 98%; /* Adjust secondary foreground color */
+    --muted: 217.2 32.6% 17.5%; /* Adjust muted color */
+    --muted-foreground: 215 20.2% 65.1%; /* Adjust muted foreground color */
+    --accent: 217.2 32.6% 17.5%; /* Adjust accent color */
+    --accent-foreground: 210 40% 98%; /* Adjust accent foreground color */
+    --destructive: 0 62.8% 30.6%; /* Adjust destructive color */
+    --destructive-foreground: 210 40% 98%; /* Adjust destructive foreground color */
+    --border: 217.2 32.6% 17.5%; /* Adjust border color */
+    --input: 217.2 32.6% 17.5%; /* Adjust input color */
+    --ring: 212.7 26.8% 83.9%; /* Adjust ring color */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;

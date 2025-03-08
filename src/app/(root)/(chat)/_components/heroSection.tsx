@@ -1,21 +1,37 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { FaPaperclip, FaUpload, FaGlobe, FaBars, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa'; // Import social media icons
-import { useGoogleLogin } from '@react-oauth/google'; // Import useGoogleLogin
+import { FaPaperclip, FaUpload, FaGlobe, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { useGoogleLogin } from '@react-oauth/google';
 import { useAppDispatch } from '@/redux/hooks';
 import axios from 'axios';
 import { userData } from '@/redux/slices/userSlice';
 import toast from 'react-hot-toast';
-import { Loader2 } from 'lucide-react'; // Import a loader icon
-import JobSearchResults from './job-result'; // Import JobSearchResults
+import { Loader2 } from 'lucide-react';
+import JobSearchResults from './job-result';
+import QueryLimitPopup from './QueryLimitPopup'; 
+
+const QUERY_LIMIT = 2;
+const STORAGE_KEY = 'userQueryCount';
 
 const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [query, setQuery] = useState(''); // State for query
-  const [showResults, setShowResults] = useState(false); // State to control visibility of JobSearchResults
+  const [query, setQuery] = useState('');
+  const [showResults, setShowResults] = useState(false);
+  const [queryCount, setQueryCount] = useState(0);
+  const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
+
+  useEffect(() => {
+    const storedCount = localStorage.getItem(STORAGE_KEY);
+    if (storedCount) {
+      setQueryCount(parseInt(storedCount, 10));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, queryCount.toString());
+  }, [queryCount]);
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
@@ -55,14 +71,30 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       if (!isLoggedIn) {
         login();
       } else {
-        setQuery(inputRef.current?.value || ''); // Set the query from input
-        setShowResults(true); // Show the JobSearchResults component
+        setQuery(inputRef.current?.value || '');
+        setShowResults(true);
+        setQueryCount(prevCount => {
+          const newCount = prevCount + 1;
+          if (newCount >= QUERY_LIMIT) {
+            setShowPopup(true); // Show the popup when limit is exceeded
+          }
+          return newCount;
+        });
       }
     }
   };
 
+  const handleCloseResults = () => {
+    setShowResults(false);
+    setQuery('');
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-[#160e0e] text-white flex flex-col">
+    <div className="min-h-screen  flex flex-col">
       {/* Loader */}
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -75,7 +107,7 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         className="fixed inset-0 pointer-events-none select-none"
         style={{
           '--gradient-opacity': '.85',
-          '--ray-gradient': 'radial-gradient(rgb(83 255 233 / 85%) 0%, rgba(43, 166, 255, 0) 100%), radial-gradient(rgb(83 255 233 / 85%) 0%, rgba(43, 166, 255, 0) 100%)',
+          '--ray-gradient': 'radial-gradient(rgb(83 255 233 / 85%) 0%, rgba(43, 166, 255, 0) 100%), radial-gradient(rgb(83, 166, 255, 0) 100%)',
           transition: 'opacity 0.25s linear',
         } as React.CSSProperties}
       />
@@ -162,42 +194,10 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       </div>
 
       {/* Navbar */}
-      <div className="flex justify-between items-center w-full mx-auto px-6 py-4">
-        <div className="flex items-center">
-          <Image src='/logo.png' alt="Lovable Logo" width={35} height={45} className='rounded-lg'/>
-          <span className="ml-2 text-white font-semibold text-lg">Jobflow</span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <a href="https://x.com/jobflow_in" target="_blank" rel="noopener noreferrer">
-            <FaTwitter className="text-white text-lg cursor-pointer hover:text-gray-400" />
-          </a>
-          <a href="https://www.linkedin.com/company/jobflow-in" target="_blank" rel="noopener noreferrer">
-            <FaLinkedin className="text-white text-lg cursor-pointer hover:text-gray-400" />
-          </a>
-          <a href="https://github.com/jobflow-ai" target="_blank" rel="noopener noreferrer">
-            <FaGithub className="text-white text-lg cursor-pointer hover:text-gray-400" />
-          </a>
-          
-          {isLoggedIn ? (
-            <button className="bg-white text-black rounded-lg px-3 py-1 text-sm font-medium">
-              Explore Tracker
-            </button>
-          ) : (
-            <>
-              <Link href="/login">
-                <button className="text-gray-400 hover:text-white text-sm border-2 border-gray-500 rounded-lg py-1 px-3">Sign in</button>
-              </Link>
-              <Link href="/signup">
-                <button className="bg-white text-black rounded-lg px-3 py-1 text-sm font-medium">Sign up</button>
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
 
       {/* Conditional Rendering for Hero Content or Job Search Results */}
-      {showResults ? (
-        <JobSearchResults query={query} />
+      {showResults && queryCount < QUERY_LIMIT ? (
+        <JobSearchResults query={query} onClose={handleCloseResults} />
       ) : (
         <div className="flex-1 flex flex-col items-center text-center mt-12 px-4">
           <Image src='/handanimation-unscreen.gif' alt="Lovable Logo" width={250} height={250} className='rounded-lg mb-20'/>
@@ -233,6 +233,9 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           </div>
         </div>
       )}
+
+      {/* Query Limit Popup */}
+      {showPopup && <QueryLimitPopup onClose={handleClosePopup} />}
     </div>
   );
 };
