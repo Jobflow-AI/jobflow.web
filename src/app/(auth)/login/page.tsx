@@ -3,6 +3,11 @@ import React, { useState, useEffect } from 'react';
 import GoogleLoginButton from '../_components/GoogleLoginButton'; // Import your Google Login component
 import Link from 'next/link';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { useAppDispatch } from '@/redux/hooks';
+import { userData } from '@/redux/slices/userSlice';
 
 // Custom hook for typewriter effect
 const useTypewriter = (texts: string[], speed: number) => {
@@ -31,6 +36,44 @@ const useTypewriter = (texts: string[], speed: number) => {
 };
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const router = useRouter();
+  const dispatch = useAppDispatch()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/api/auth/login', formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success('Login successful!');
+        dispatch(userData(response.data.user))
+        router.push('/'); // Redirect to homepage on success
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error('Login failed. Please try again.');
+    }
+  };
+
   const typewriterText = useTypewriter(
     [
       'Empowering your job search with AI.',
@@ -75,13 +118,15 @@ const Login = () => {
           </div>
 
           {/* Form Section */}
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <input
                 type="email"
                 id="email"
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-white text-white"
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-4">
@@ -90,6 +135,8 @@ const Login = () => {
                 id="password"
                 placeholder="Password"
                 className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-white text-white"
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
             <div className="flex items-center justify-between mb-6">

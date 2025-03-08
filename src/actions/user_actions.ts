@@ -18,16 +18,17 @@ export const registerUser = async(data: any) => {
       );
   
       const response = await res.json();
-      console.log("here is the user" , response)
+
+      if (!res.ok) {
+        throw new Error(response.message || "Registration failed");
+      }
   
       return response;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        throw new Error(`Error in registering user: ${error.message}`);
+        return { success: false, message: `Error in registering user: ${error.message}` };
       } else {
-        throw new Error(
-          "An unknown error occurred while registering user"
-        );
+        return { success: false, message: "An unknown error occurred while registering user" };
       }
     }
 }
