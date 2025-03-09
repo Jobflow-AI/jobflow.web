@@ -9,7 +9,10 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { userData } from '@/redux/slices/userSlice';
 import toast from 'react-hot-toast';
 
-const ChatInput = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
+const ChatInput = ({ isLoggedIn, onSubmit }: { 
+  isLoggedIn: boolean;
+  onSubmit?: (query: string) => void;
+}) => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const inputRef = useRef<HTMLDivElement>(null);
@@ -81,22 +84,25 @@ const ChatInput = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   // New function to handle both Enter key and button click
   const handleSubmit = () => {
+    console.log("button getting clicked")
     if (isLoading) return;
     
     if (!isLoggedIn) {
       setIsLoading(true);
       login();
     } else {
+      console.log("button not getting clicked")
       const inputText = inputRef.current?.textContent || '';
-      setQuery(inputText);
-      setShowResults(true);
-      setQueryCount(prevCount => {
-        const newCount = prevCount + 1;
-        if (newCount >= QUERY_LIMIT) {
-          setShowPopup(true); // Show the popup when limit is exceeded
+      console.log("inputText", inputText)
+      if (onSubmit) {
+        console.log("lafda")
+        onSubmit(inputText);
+        // Clear input after submission
+        if (inputRef.current) {
+          inputRef.current.textContent = '';
         }
-        return newCount;
-      });
+        setInputValue('');
+      }
     }
   };
 
@@ -168,7 +174,7 @@ const ChatInput = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             <button
               className="px-4 py-1 bg-[#53ffe9d9] text-black font-medium rounded-md hover:bg-[#53ffe9] transition-colors"
               onClick={handleSubmit}
-              disabled={isLoading}
+              // disabled={isLoading}
             >
               {isLoading ? <Loader2/> : 'Send'}
             </button>
