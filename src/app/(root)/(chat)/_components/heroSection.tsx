@@ -12,7 +12,7 @@ import QueryLimitPopup from './QueryLimitPopup';
 import ChatInput from './chatinput';
 import { Button } from '@/components/ui/button';
 
-const QUERY_LIMIT = 2;
+const QUERY_LIMIT = 5;
 const STORAGE_KEY = 'userQueryCount';
 
 const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
@@ -30,7 +30,7 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       setQueryCount(parseInt(storedCount, 10));
     }
   }, []);
-
+ console.log(showResults,"this is results")
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, queryCount.toString());
   }, [queryCount]);
@@ -46,13 +46,20 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     setShowPopup(false);
   };
 
+  const handleChatSubmit = (inputText: string) => {
+    setQuery(inputText);
+    setShowResults(true);
+    setQueryCount(prevCount => {
+      const newCount = prevCount + 1;
+      if (newCount >= QUERY_LIMIT) {
+        setShowPopup(true);
+      }
+      return newCount;
+    });
+  };
+
   return (
-    <div className="min-h-screen  flex flex-col">
-      {/* Loader */}
-     
-
-
-
+    <div className="min-h-screen flex flex-col">
       {/* Ray Container with multiple light rays */}
       <div 
           className="fixed inset-0 pointer-events-none select-none"
@@ -141,36 +148,49 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         <JobSearchResults query={query} onClose={handleCloseResults} />
       ) : (
         <div className="flex-1 flex flex-col items-center text-center mt-2 px-4">
-      <div className="flex justify-center mt-4 mb-[10%]">
-          <Button variant="outline" className="rounded-full bg-black/50 border-gray-700 hover:bg-black/70 text-white">
-            <SparklesIcon className="w-4 h-4 mr-2" />
-            Introducing Chrome Extension for Contextual AutoFilling 
-          </Button>
-      </div>
-        <div>
-        </div>
+      {!showResults || queryCount >= QUERY_LIMIT ? (
+        // Show hero content when no results or query limit reached
+        <>
+          <div className="flex justify-center mt-4 mb-[10%]">
+            <Button variant="outline" className="rounded-full bg-black/50 border-gray-700 hover:bg-black/70 text-white">
+              <SparklesIcon className="w-4 h-4 mr-2" />
+              Introducing Chrome Extension for Contextual AutoFilling 
+            </Button>
+          </div>
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Find and apply jobs in seconds.
           </h1>
           <p className="text-gray-400 text-lg mb-8 max-w-2xl">
             Jobflow is your JobGpt. Start for free today.
           </p>
-          <div className='w-[60%]'>
-          <ChatInput isLoggedIn={isLoggedIn} />
-          </div>
-          <div className="flex flex-wrap justify-center gap-3 mt-6">
-            {['Recharts dashboard', 'Habit tracker', 'Real estate listings', 'Developer portfolio'].map((item) => (
-              <button
-                key={item}
-                className="bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg px-5 py-2 text-sm font-medium"
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+        </>
+      ) : (
+        // Show job results when results should be displayed
+        <div className="w-full mb-8">
+          <JobSearchResults query={query} onClose={handleCloseResults} />
         </div>
       )}
-
+      
+      {/* Chat input always visible */}
+      <div className='w-[60%]'>
+        <ChatInput isLoggedIn={isLoggedIn} onSubmit={handleChatSubmit} />
+      </div>
+      
+      {/* Only show suggestion buttons when no results */}
+      {(!showResults || queryCount >= QUERY_LIMIT) && (
+        <div className="flex flex-wrap justify-center gap-3 mt-6">
+          {['Recharts dashboard', 'Habit tracker', 'Real estate listings', 'Developer portfolio'].map((item) => (
+            <button
+              key={item}
+              className="bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg px-5 py-2 text-sm font-medium"
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      )}
+      </div>
+      )}
       {/* Query Limit Popup */}
       {showPopup && <QueryLimitPopup onClose={handleClosePopup} />}
     </div>
