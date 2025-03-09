@@ -1,6 +1,9 @@
 import { getUser } from "@/actions/user_actions";
 import Navbar from "@/components/shared/Navbar";
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "JobFlow",
@@ -18,7 +21,7 @@ export default async function MainLayout({
   return (
     <>
         {/* <Navbar user={data?.user}/> */}
-        <div className="flex flex-wrap items-center justify-center">
+        <div  className="flex flex-wrap items-center justify-center">
           {children}
         </div>
     </>

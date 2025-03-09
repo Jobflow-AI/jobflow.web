@@ -12,6 +12,7 @@ const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 })
+const inter = Inter({ subsets: ["latin"] })
 
 
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export default async function RootLayout({
           >
       <body className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          inter.className
         )}>
           <Toaster />
           {children}
