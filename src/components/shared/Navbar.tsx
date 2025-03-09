@@ -1,44 +1,55 @@
+'use client'
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
-import React from 'react';
+import { useAppSelector } from '@/redux/hooks';
+import { usePathname } from 'next/navigation';
 
-const Navbar = ({ user }: any) => {
+const Navbar = () => {
+  const user = useAppSelector(state => state.user.user); 
+  const [isOnTrackerPage, setIsOnTrackerPage] = useState(false); 
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') { // Ensure this runs only on the client side
+      setIsOnTrackerPage(window.location.pathname === '/tracker');
+    }
+  }, [pathname]); // Update when pathname changes
+
   return (
-    <nav className="bg-white shadow-md sticky top-0 left-0 w-full z-50 h-16">
-      <div className="container mx-auto flex items-center justify-between px-6">
-        {/* Left Section: Logo */}
-        <div className="flex items-center space-x-2">
-          <img 
-            src="/logo.png" // Replace with the path to your logo
-            alt="Company Logo" 
-            className="h-[60px]"
-          />
-          <span className="text-xl font-semibold text-black">Find Your Job</span>
-        </div>
-
-        {/* Right Section */}
+    <div className="flex justify-between items-center w-full mx-auto px-6 py-4 sticky top-0">
+      <Link href={'/'} className="flex items-center">
+        <Image src='/logo.png' alt="Lovable Logo" width={35} height={45} className='rounded-lg'/>
+        <span className="ml-2 text-white font-semibold text-lg">Jobflow</span>
+      </Link>
+      <div className="flex items-center space-x-4">
+        <a href="https://x.com/jobflow_in" target="_blank" rel="noopener noreferrer">
+          <FaTwitter className="text-white text-lg cursor-pointer hover:text-gray-400" />
+        </a>
+        <a href="https://www.linkedin.com/company/jobflow-in" target="_blank" rel="noopener noreferrer">
+          <FaLinkedin className="text-white text-lg cursor-pointer hover:text-gray-400" />
+        </a>
+        <a href="https://github.com/jobflow-ai" target="_blank" rel="noopener noreferrer">
+          <FaGithub className="text-white text-lg cursor-pointer hover:text-gray-400" />
+        </a>
+        
         {user ? (
-          // Profile Icon when user is logged in
-          <Link href={'/profile'} className="flex items-center space-x-4">
-            <img
-              src={user.profileImage || "/assets/default-profile.png"} // Default image if no profileImage
-              alt="Profile"
-              className="w-10 h-10 rounded-full cursor-pointer"
-              title="Profile"
-            />
-            <span className="text-sm text-black font-medium">
-              {user.name || "User"}
-            </span>
+          <Link href={isOnTrackerPage ? '/dashboard' : '/tracker'} className="bg-white text-black rounded-lg px-3 py-1 text-sm font-medium">
+            {isOnTrackerPage ? 'Dashboard' : 'Explore Tracker'}
           </Link>
         ) : (
-          // Start Tracking Your Jobs button
-          <Link href={'/signup'}
-            className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm"
-          >
-            Start Tracking Your Jobs
-          </Link>
+          <>
+            <Link href="/login">
+              <button className="text-gray-400 hover:text-white text-sm border-2 border-gray-500 rounded-lg py-1 px-3">Sign in</button>
+            </Link>
+            <Link href="/signup">
+              <button className="bg-white text-black rounded-lg px-3 py-1 text-sm font-medium">Sign up</button>
+            </Link>
+          </>
         )}
       </div>
-    </nav>
+    </div>
   );
 };
 

@@ -25,7 +25,7 @@ export default function Layout({ children }: ChatLayoutProps) {
       setIsApplyPanelOpen,
       currentJob
     }}>
-      <div className="flex gap-2 h-screen w-full bg-black p-4">
+      <div className="flex gap-2 h-screen w-full p-4">
         {/* Sidebar or Chat List */}
         {/* <Sidebar /> */}
         
