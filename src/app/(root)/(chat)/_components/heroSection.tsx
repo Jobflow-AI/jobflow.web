@@ -35,34 +35,38 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
-      setIsLoading(true);
-      try {
-        const res = await axios.post(
-          "/api/google/auth",
-          {
-            access_token: credentialResponse.access_token,
-          },
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json",
+        setIsLoading(true);
+        try {
+          const res = await axios.post(
+            "/api/google/auth",
+            {
+              access_token: credentialResponse.access_token,
             },
+            {
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+    
+          if (res.status === 200) {
+            dispatch(userData(res.data.user));
+            toast.success("Login success");
+          } else {
+            toast.error("Error: Login Falied");
           }
-        );
-
-        dispatch(userData(res.data.user));
-        toast.success("Login success");
-      } catch (error: any) {
-        console.error("Axios error:", error);
+        } catch (error: any) {
+          console.error("Axios error:", error);
+          toast.error("Google login failed!");
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      onError: (error: any) => {
+        console.error("Google login error:", error);
         toast.error("Google login failed!");
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    onError: (error: any) => {
-      console.error("Google login error:", error);
-      toast.error("Google login failed!");
-    },
+      },
   });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
