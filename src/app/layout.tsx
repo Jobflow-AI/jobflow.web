@@ -8,10 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { getUser } from "@/actions/user_actions";
 import { scrapeAndCreateJobs } from "@/actions/data_actions";
 
-const fontSans = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
+const inter = Inter({ subsets: ["latin"] })
 
 
 export const metadata: Metadata = {
@@ -36,7 +33,7 @@ export default async function RootLayout({
           >
       <body className={cn(
           "min-h-screen bg-background font-sans antialiased dark",
-          fontSans.variable
+          inter.className
         )}>
           <Toaster />
           {children}

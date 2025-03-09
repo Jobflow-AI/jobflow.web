@@ -218,4 +218,38 @@ export const getYourJobs = async () => {
     }
   };
   
+  // In your user_actions.ts file, modify the uploadResume function:
+  export const uploadResume = async (formData: FormData) => {
+    const token = await getCookie("token");
+    
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/resume/upload`,
+        {
+          method: "POST",
+          headers: {
+            Cookie: `token=${token}`,
+          },
+          body: formData,
+          credentials: "include",
+        }
+      );
+      
+      const parsedData = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(parsedData.message || "Resume upload failed");
+      }
+      
+      return parsedData;
+    } catch (error: any) {
+      console.error("Error in uploading resume:", error);
+      return { 
+        success: false, 
+        error: error.message || "Unknown error",
+        message: "Failed to upload and parse resume" 
+      };
+    }
+  };
+  
   
