@@ -259,9 +259,10 @@ export const getYourJobs = async () => {
         {
           method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Cookie: `token=${token}`,
           },
-          body: data,
+          body: JSON.stringify(data),
           credentials: "include",
         }
       );
