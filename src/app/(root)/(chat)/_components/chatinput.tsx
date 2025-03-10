@@ -9,9 +9,10 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { userData } from '@/redux/slices/userSlice';
 import toast from 'react-hot-toast';
 
-const ChatInput = ({ isLoggedIn, onSubmit }: { 
+const ChatInput = ({ isLoggedIn, onSubmit, setShowResumePopup }: { 
   isLoggedIn: boolean;
   onSubmit?: (query: string) => void;
+  setShowResumePopup?: any; // New prop for first signup callback
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -24,7 +25,6 @@ const ChatInput = ({ isLoggedIn, onSubmit }: {
   const router = useRouter();
   const dispatch = useAppDispatch();
   
-
   const QUERY_LIMIT = 2;
   const STORAGE_KEY = 'userQueryCount';
 
@@ -58,6 +58,19 @@ const ChatInput = ({ isLoggedIn, onSubmit }: {
           if (res.status === 200) {
             dispatch(userData(res.data.user));
             toast.success("Login success");
+            
+            console.log(res, "here is ther eponse ")
+            // Check if this is a first-time signup
+            const isNewUser = res.data.newUser || false;
+            console.log(isNewUser, "herer")
+            
+            // If this is a first-time signup and the callback exists, trigger it
+            if (isNewUser && setShowResumePopup) {
+              // Small delay to ensure the login success message is seen first
+              setTimeout(() => {
+                setShowResumePopup(true);
+              }, 1000);
+            }
           } else {
             toast.error("Error: Login Failed");
           }
@@ -82,104 +95,142 @@ const ChatInput = ({ isLoggedIn, onSubmit }: {
     }
   };
 
-  // New function to handle both Enter key and button click
+  // Add a more reliable way to track input content
+  useEffect(() => {
+    // Initialize the ref with the current input value if needed
+    if (inputRef.current && inputValue) {
+      inputRef.current.textContent = inputValue;
+    }
+  }, []);
+
+  // Simplified input handling with textarea
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    setIsTyping(newValue.length > 0);
+    console.log("Input updated with textarea:", newValue);
+  };
+
+  // Function to handle both Enter key and button click
   const handleSubmit = () => {
-    console.log("button getting clicked")
-    if (isLoading) return;
+    console.log("Submit function called");
+    
+    if (isLoading) {
+      return;
+    }
     
     if (!isLoggedIn) {
       setIsLoading(true);
       login();
     } else {
-      console.log("button not getting clicked")
-      const inputText = inputRef.current?.textContent || '';
-      console.log("inputText", inputText)
-      if (onSubmit) {
-        console.log("lafda")
+      // Get input text directly from state
+      const inputText = inputValue.trim();
+      
+      console.log("Input text from state:", inputValue);
+      console.log("Final input text:", inputText);
+      
+      if (onSubmit && inputText) {
+        console.log("Calling onSubmit with:", inputText);
         onSubmit(inputText);
+        
         // Clear input after submission
-        if (inputRef.current) {
-          inputRef.current.textContent = '';
-        }
         setInputValue('');
+        setIsTyping(false);
+      } else {
+        if (!onSubmit) console.log("onSubmit function is not provided");
+        if (!inputText) console.log("Input text is empty");
       }
     }
+  };
+
+  // Handle form submission - make sure this is properly preventing default
+  const handleFormSubmit = (e: React.FormEvent) => {
+    console.log("Form submit event triggered");
+    e.preventDefault();
+    handleSubmit();
   };
 
   return (
     <div className="flex flex-col items-center justify-center bg-[#050505] text-white p-4 overflow-hidden">
       <div className="w-full mx-auto z-10 px-4 animate-fade-in">
-        {/* Input Container */}
-        <div className="relative shadow-sm border border-[#ffffff1a] bg-[#171717cc] backdrop-blur rounded-lg p-4 transition-all duration-300 hover:border-[#ffffff33]">
-          <div className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
-            <svg className="absolute bottom-0 right-0 w-full h-full">
-              <defs>
-                <linearGradient id="line-gradient" x1="70%" y1="70%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#53ffe9d9" stopOpacity="0%" />
-                  <stop offset="40%" stopColor="#53ffe9d9" stopOpacity="80%" />
-                  <stop offset="50%" stopColor="#53ffe9d9" stopOpacity="80%" />
-                  <stop offset="100%" stopColor="#53ffe9d9" stopOpacity="0%" />
-                </linearGradient>
-              </defs>
-              <rect x="0" y="0" width="100%" height="100%" fill="transparent" stroke="url(#line-gradient)" strokeWidth="1" rx="8" />
-            </svg>
-          </div>
+        {/* Form Container */}
+        <form onSubmit={handleFormSubmit} className="w-full">
+          <div className="relative shadow-sm border border-[#ffffff1a] bg-[#171717cc] backdrop-blur rounded-lg p-4 transition-all duration-300 hover:border-[#ffffff33]">
+            <div className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
+              <svg className="absolute bottom-0 right-0 w-full h-full">
+                <defs>
+                  <linearGradient id="line-gradient" x1="70%" y1="70%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#53ffe9d9" stopOpacity="0%" />
+                    <stop offset="40%" stopColor="#53ffe9d9" stopOpacity="80%" />
+                    <stop offset="50%" stopColor="#53ffe9d9" stopOpacity="80%" />
+                    <stop offset="100%" stopColor="#53ffe9d9" stopOpacity="0%" />
+                  </linearGradient>
+                </defs>
+                <rect x="0" y="0" width="100%" height="100%" fill="transparent" stroke="url(#line-gradient)" strokeWidth="1" rx="8" />
+              </svg>
+            </div>
 
-          {/* Combined input and placeholder container */}
-          <div className="relative min-h-[40px]">
-            {/* Only show placeholder when not typing */}
-            {!isTyping && !inputValue && (
-              <div className="absolute inset-0 py-2">
-                <TypewriterPlaceholder 
-                  placeholders={placeholders}
-                  className="text-md sm:text-lg"
-                  cursorClassName="bg-[#53ffe9d9]"
-                />
+            {/* Combined input and placeholder container */}
+            <div className="relative min-h-[40px]">
+              {/* Only show placeholder when not typing */}
+              {!isTyping && !inputValue && (
+                <div className="absolute inset-0 py-2 pointer-events-none">
+                  <TypewriterPlaceholder 
+                    placeholders={placeholders}
+                    className="text-md sm:text-lg"
+                    cursorClassName="bg-[#53ffe9d9]"
+                  />
+                </div>
+              )}
+              
+              {/* Textarea input instead of contentEditable div */}
+              <textarea 
+                className="min-h-[40px] py-2 text-md sm:text-lg outline-none w-full bg-transparent resize-none overflow-hidden"
+                value={inputValue}
+                onChange={handleInputChange}
+                onFocus={() => setIsTyping(true)}
+                onBlur={() => setIsTyping(inputValue.length > 0)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit();
+                  }
+                }}
+                style={{ caretColor: "#53ffe9d9" }}
+                placeholder=""
+                rows={1}
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-between text-sm pt-2">
+              <div className="flex gap-2 items-center">
+                <button 
+                  className="flex items-center text-gray-400 hover:text-[#53ffe9d9] rounded-md p-1 transition-colors duration-200"
+                  onClick={() => {/* Handle upload */}}
+                  type="button"
+                >
+                  <Upload className="text-xl" />
+                </button>
+                <button 
+                  className="flex items-center text-gray-400 opacity-30 cursor-not-allowed rounded-md p-1"
+                  type="button"
+                  disabled
+                >
+                  <Stars className="text-xl" />
+                </button>
               </div>
-            )}
-            
-            {/* Actual input field - positioned in the same place */}
-            <div 
-              className="min-h-[40px] py-2 text-md sm:text-lg outline-none w-full bg-transparent"
-              contentEditable
-              ref={inputRef}
-              onFocus={() => setIsTyping(true)}
-              onBlur={() => setIsTyping(inputValue.length > 0)}
-              onInput={(e) => {
-                setInputValue(e.currentTarget.textContent || '');
-              }}
-              onKeyDown={handleKeyDown}
-              style={{ caretColor: "#53ffe9d9" }}
-            />
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex justify-between text-sm pt-2">
-            <div className="flex gap-2 items-center">
-              <button 
-                className="flex items-center text-gray-400 hover:text-[#53ffe9d9] rounded-md p-1 transition-colors duration-200"
-                onClick={() => {/* Handle upload */}}
+              <button
+                className="px-4 py-1 bg-[#53ffe9d9] text-black font-medium rounded-md hover:bg-[#53ffe9] transition-colors"
                 type="button"
+                disabled={isLoading}
+                onClick={handleSubmit}
               >
-                <Upload className="text-xl" />
-              </button>
-              <button 
-                className="flex items-center text-gray-400 opacity-30 cursor-not-allowed rounded-md p-1"
-                type="button"
-                disabled
-              >
-                <Stars className="text-xl" />
+                {isLoading ? <Loader2 className="animate-spin" /> : 'Send'}
               </button>
             </div>
-            <button
-              className="px-4 py-1 bg-[#53ffe9d9] text-black font-medium rounded-md hover:bg-[#53ffe9] transition-colors"
-              onClick={handleSubmit}
-              // disabled={isLoading}
-            >
-              {isLoading ? <Loader2/> : 'Send'}
-            </button>
           </div>
-        </div>
+        </form>
       </div>
       
       {/* Background gradient */}
