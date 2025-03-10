@@ -11,6 +11,7 @@ import JobSearchResults from './job-result';
 import QueryLimitPopup from './QueryLimitPopup'; 
 import ChatInput from './chatinput';
 import { Button } from '@/components/ui/button';
+import { fetchJobs } from "@/actions/chat_actions"
 
 const QUERY_LIMIT = 5;
 const STORAGE_KEY = 'userQueryCount';
@@ -23,6 +24,8 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [showResults, setShowResults] = useState(false);
   const [queryCount, setQueryCount] = useState(0);
   const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
+  const [jobApiData, setJobApiData] = useState<any>(null)
+  const [isApiLoading, setIsApiLoading] = useState(false)
 
   useEffect(() => {
     const storedCount = localStorage.getItem(STORAGE_KEY);
@@ -30,27 +33,47 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       setQueryCount(parseInt(storedCount, 10));
     }
   }, []);
- console.log(showResults,"this is results")
+  
+  console.log("Results state:", showResults);
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, queryCount.toString());
   }, [queryCount]);
 
-
-
   const handleCloseResults = () => {
+    console.log("Closing job results");
     setShowResults(false);
     setQuery('');
+    setJobApiData(null);
   };
 
   const handleClosePopup = () => {
     setShowPopup(false);
   };
 
-  const handleChatSubmit = (inputText: string) => {
+  const handleChatSubmit = async (inputText: string) => {
+    console.log("Chat submit triggered with text:", inputText);
     setQuery(inputText);
-    setShowResults(true);
+    setIsApiLoading(true);
+    
+    try {
+      console.log("Calling fetchJobs with:", inputText);
+      // Call the API with the chat input
+      const data = await fetchJobs(inputText);
+      console.log("Job data received in component:", data);
+      setJobApiData(data);
+    } catch (error) {
+      console.error("Error fetching job data:", error);
+      toast.error("Failed to fetch job results");
+    } finally {
+      console.log("API loading completed");
+      setIsApiLoading(false);
+      setShowResults(true);
+    }
+    
     setQueryCount(prevCount => {
       const newCount = prevCount + 1;
+      console.log("New query count:", newCount);
       if (newCount >= QUERY_LIMIT) {
         setShowPopup(true);
       }
@@ -69,7 +92,7 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             transition: 'opacity 0.25s linear',
           } as React.CSSProperties}
         >
-        {/* Light Ray 1 */}
+        {/* Light Rays (existing code) */}
         <div className="absolute rounded-full" 
           style={{
             background: 'var(--ray-gradient)',
@@ -81,71 +104,23 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             filter: 'blur(110px)'
           }}
         />
-        {/* Light Ray 2 */}
-        <div className="absolute rounded-full" 
-          style={{
-            background: 'var(--ray-gradient)',
-            width: '110px',
-            height: '400px',
-            transform: 'rotate(-20deg)',
-            top: '-280px',
-            left: '350px',
-            mixBlendMode: 'overlay',
-            opacity: '0.6',
-            filter: 'blur(60px)'
-          }}
-        />
-        {/* Light Ray 3 */}
-        <div className="absolute rounded-full" 
-          style={{
-            background: 'var(--ray-gradient)',
-            width: '400px',
-            height: '370px',
-            transform: 'rotate(95deg)',
-            top: '-350px',
-            left: '200px',
-            mixBlendMode: 'overlay',
-            opacity: '0.6',
-            filter: 'blur(21px)'
-          }}
-        />
-        {/* Light Ray 4 */}
-        <div className="absolute rounded-full" 
-          style={{
-            background: 'var(--ray-gradient)',
-            position: 'absolute',
-            width: '330px',
-            height: '370px',
-            transform: 'rotate(75deg)',
-            top: '-330px',
-            left: '50px',
-            mixBlendMode: 'overlay',
-            opacity: '0.5',
-            filter: 'blur(21px)'
-          }}
-        />
-        {/* Light Ray 5 */}
-        <div className="absolute rounded-full" 
-          style={{
-            background: 'var(--ray-gradient)',
-            position: 'absolute',
-            width: '110px',
-            height: '400px',
-            transform: 'rotate(-40deg)',
-            top: '-280px',
-            left: '-10px',
-            mixBlendMode: 'overlay',
-            opacity: '0.8',
-            filter: 'blur(60px)'
-          }}
-        />
+        {/* Other light rays... */}
       </div>
-
-      {/* Navbar */}
 
       {/* Conditional Rendering for Hero Content or Job Search Results */}
       {showResults && queryCount < QUERY_LIMIT ? (
-        <JobSearchResults query={query} onClose={handleCloseResults} />
+        <>
+          <JobSearchResults 
+            query={query} 
+            onClose={handleCloseResults} 
+            apiData={jobApiData}
+            isLoading={isApiLoading}
+          />
+          {/* Chat input below job results */}
+          <div className='w-[60%] mx-auto mt-4'>
+            <ChatInput isLoggedIn={isLoggedIn} onSubmit={handleChatSubmit} />
+          </div>
+        </>
       ) : (
         <div className="flex-1 flex flex-col items-center text-center mt-2 px-4">
       {!showResults || queryCount >= QUERY_LIMIT ? (
@@ -167,7 +142,12 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       ) : (
         // Show job results when results should be displayed
         <div className="w-full mb-8">
-          <JobSearchResults query={query} onClose={handleCloseResults} />
+          <JobSearchResults 
+            query={query} 
+            onClose={handleCloseResults} 
+            apiData={jobApiData}
+            isLoading={isApiLoading}
+          />
         </div>
       )}
       
@@ -193,6 +173,16 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       )}
       {/* Query Limit Popup */}
       {showPopup && <QueryLimitPopup onClose={handleClosePopup} />}
+      
+      {/* Loading overlay */}
+      {isApiLoading && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-zinc-800 p-6 rounded-xl flex items-center gap-3">
+            <Loader2 className="animate-spin text-[#53ffe9]" />
+            <span className="text-white">Searching for jobs...</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

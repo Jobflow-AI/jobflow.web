@@ -1,65 +1,92 @@
-"use client"
-import { useState } from "react"
-import type React from "react"
-import { motion } from "framer-motion"
-import JobDetail from "./job-details"
-import JobList from "./job-list"
-import jobData from "@/data/data.json"
+import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
+import type { Job } from '@/types/job';
 
 interface JobSearchResultsProps {
-  query: string
-  onClose: () => void // Add onClose prop
+  query: string;
+  onClose: () => void;
+  apiData: any;
+  isLoading?: boolean;
 }
 
-const JobSearchResults: React.FC<JobSearchResultsProps> = ({ query, onClose }) => {
-  const [selectedJobIndex, setSelectedJobIndex] = useState(0)
+const JobSearchResults = ({ query, onClose, apiData, isLoading = false }: JobSearchResultsProps) => {
+  useEffect(() => {
+    console.log("JobSearchResults mounted with apiData:", apiData);
+  }, [apiData]);
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.3,
-        staggerChildren: 0.1,
-      },
-    },
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-4xl mx-auto bg-zinc-800 rounded-xl p-6 mt-16">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-white">Results for "{query}"</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-white">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="flex items-center justify-center py-12">
+          <p className="text-gray-400">Loading job results...</p>
+        </div>
+      </div>
+    );
   }
 
+  if (!apiData || !apiData.jobs || apiData.jobs.length === 0) {
+    console.log("No job data available");
+    return (
+      <div className="w-full max-w-4xl mx-auto bg-zinc-800 rounded-xl p-6 mt-16">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-white">Results for "{query}"</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-white">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="flex items-center justify-center py-12">
+          <p className="text-gray-400">No job listings found. Try a different search.</p>
+        </div>
+      </div>
+    );
+  }
+
+  console.log("Rendering job results:", apiData.jobs.length);
+
   return (
-    <motion.div 
-      className="bg-zinc-800 rounded-xl shadow-lg overflow-hidden w-full max-w-5xl mx-auto relative"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      <button 
-        className="absolute top-2 right-2 text-white  rounded-full p-2"
-        onClick={onClose} // Handle close action
-      >
-        &times; {/* Cross symbol */}
-      </button>
-      <div className="p-4 bg-zinc-700">
-        <h2 className="text-white text-xl font-medium">
-          Job Results for: <span className="text-[#b9ff2c]">{query}</span>
-        </h2>
+    <div className="w-full max-w-4xl mx-auto bg-zinc-800 rounded-xl p-6 mt-16">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-white">Results for "{query}"</h2>
+        <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <X size={20} />
+        </button>
       </div>
-
-      <div className="flex flex-col md:flex-row h-[500px] max-h-[70vh] overflow-hidden">
-        <div className="border-r border-zinc-700 overflow-y-auto">
-          <JobList 
-            jobs={jobData.companies} 
-            selectedIndex={selectedJobIndex} 
-            onSelectJob={setSelectedJobIndex} 
-          />
-        </div>
-        <div className="md:w-2/3 overflow-y-auto">
-          <JobDetail job={jobData.companies[selectedJobIndex]} />
-        </div>
+      
+      <div className="space-y-4">
+        {apiData.jobs.map((job: Job) => (
+          <div key={job.id} className="bg-zinc-700 rounded-lg p-4 hover:bg-zinc-600 transition-colors">
+            <div className="flex justify-between">
+              <h3 className="text-lg font-medium text-white">{job.title}</h3>
+              <span className="text-[#53ffe9] font-medium">{job.salary}</span>
+            </div>
+            <div className="flex items-center text-gray-300 text-sm mt-1">
+              <span>{job.company}</span>
+              <span className="mx-2">•</span>
+              <span>{job.location}</span>
+              {job.remote && <span className="ml-2 px-2 py-0.5 bg-zinc-600 rounded text-xs">Remote</span>}
+            </div>
+            <p className="text-gray-400 text-sm mt-2 line-clamp-2">{job.description}</p>
+            <div className="flex justify-between items-center mt-3">
+              <div className="flex gap-2">
+                {job.tags && job.tags.map((tag, index) => (
+                  <span key={index} className="px-2 py-0.5 bg-zinc-600 rounded text-xs text-gray-300">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <button className="text-sm text-[#53ffe9] hover:underline">View Details</button>
+            </div>
+          </div>
+        ))}
       </div>
-    </motion.div>
-  )
-}
+    </div>
+  );
+};
 
-export default JobSearchResults
+export default JobSearchResults;
