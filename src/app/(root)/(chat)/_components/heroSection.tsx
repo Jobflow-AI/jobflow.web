@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { Loader2, SparklesIcon } from 'lucide-react';
 import JobSearchResults from './job-result';
 import QueryLimitPopup from './QueryLimitPopup'; 
+import ResumeUploadPopup from './ResumeUploadPopup'; // Import the new component
 import ChatInput from './chatinput';
 import { Button } from '@/components/ui/button';
 import { fetchJobs } from "@/actions/chat_actions"
@@ -23,7 +24,8 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [query, setQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [queryCount, setQueryCount] = useState(0);
-  const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
+  const [showPopup, setShowPopup] = useState(false); // State to control query limit popup
+  const [showResumePopup, setShowResumePopup] = useState(false); // New state for resume popup
   const [jobApiData, setJobApiData] = useState<any>(null)
   const [isApiLoading, setIsApiLoading] = useState(false)
 
@@ -49,6 +51,10 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
 
   const handleClosePopup = () => {
     setShowPopup(false);
+  };
+
+  const handleCloseResumePopup = () => {
+    setShowResumePopup(false);
   };
 
   const handleChatSubmit = async (inputText: string) => {
@@ -118,7 +124,11 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           />
           {/* Chat input below job results */}
           <div className='w-[60%] mx-auto mt-4'>
-            <ChatInput isLoggedIn={isLoggedIn} onSubmit={handleChatSubmit} />
+            <ChatInput 
+              isLoggedIn={isLoggedIn} 
+              onSubmit={handleChatSubmit} 
+              setShowResumePopup={setShowResumePopup} // Pass the first signup handler
+            />
           </div>
         </>
       ) : (
@@ -153,7 +163,11 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       
       {/* Chat input always visible */}
       <div className='w-[60%]'>
-        <ChatInput isLoggedIn={isLoggedIn} onSubmit={handleChatSubmit} />
+        <ChatInput 
+          isLoggedIn={isLoggedIn} 
+          onSubmit={handleChatSubmit} 
+          setShowResumePopup={setShowResumePopup} // Pass the first signup handler
+        />
       </div>
       
       {/* Only show suggestion buttons when no results */}
@@ -171,8 +185,12 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       )}
       </div>
       )}
+      
       {/* Query Limit Popup */}
       {showPopup && <QueryLimitPopup onClose={handleClosePopup} />}
+      
+      {/* Resume Upload Popup - show only after first signup */}
+      {showResumePopup && <ResumeUploadPopup onClose={handleCloseResumePopup} />}
       
       {/* Loading overlay */}
       {isApiLoading && (

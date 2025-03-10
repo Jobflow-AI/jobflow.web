@@ -1,4 +1,5 @@
 import type { Job } from "@/types/job"
+import { getCookie } from "./get_cookie";
 
 interface JobsResponse {
   jobs: Job[]
@@ -6,25 +7,22 @@ interface JobsResponse {
 
 export const fetchJobs = async (chatdata: any) => {
   console.log("Sending API request with data:", chatdata);
+  const token = await getCookie("token");
   
-  try {
-    const apiUrl = "http://127.0.0.1:5000/api/chat?mock=true"
-    
-    console.log("API URL:", apiUrl);
-    
-    const response = await fetch("http://127.0.0.1:5000/api/chat?mock=true", {
+  try {    
+    const response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat?mock=true`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: `token=${token}`,
       },
       credentials: "include", // Include credentials for cross-origin requests
-      mode: "cors", // Explicitly set CORS mode
       body: JSON.stringify({
         question: chatdata,
       }),
     })
     
-    console.log("API response status:", response.status);
+    console.log("API response status:", response);
     
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`)

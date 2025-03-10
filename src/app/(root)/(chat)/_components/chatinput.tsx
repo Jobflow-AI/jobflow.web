@@ -9,9 +9,10 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { userData } from '@/redux/slices/userSlice';
 import toast from 'react-hot-toast';
 
-const ChatInput = ({ isLoggedIn, onSubmit }: { 
+const ChatInput = ({ isLoggedIn, onSubmit, setShowResumePopup }: { 
   isLoggedIn: boolean;
   onSubmit?: (query: string) => void;
+  setShowResumePopup?: any; // New prop for first signup callback
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -57,6 +58,19 @@ const ChatInput = ({ isLoggedIn, onSubmit }: {
           if (res.status === 200) {
             dispatch(userData(res.data.user));
             toast.success("Login success");
+            
+            console.log(res, "here is ther eponse ")
+            // Check if this is a first-time signup
+            const isNewUser = res.data.newUser || false;
+            console.log(isNewUser, "herer")
+            
+            // If this is a first-time signup and the callback exists, trigger it
+            if (isNewUser && setShowResumePopup) {
+              // Small delay to ensure the login success message is seen first
+              setTimeout(() => {
+                setShowResumePopup(true);
+              }, 1000);
+            }
           } else {
             toast.error("Error: Login Failed");
           }

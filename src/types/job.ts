@@ -23,11 +23,11 @@ export interface Company {
     job_id: string
     job_link: string
     job_location: string
-    job_salary: string
+    salary_min: string
+    salary_max: string
+    job_salary: string   
     job_type: string
     posted: string
-    salary_max: string
-    salary_min: string
     skills_required: string
     source: string
     source_logo: string | null
