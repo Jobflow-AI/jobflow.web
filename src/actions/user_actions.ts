@@ -237,10 +237,6 @@ export const getYourJobs = async () => {
       
       const parsedData = await res.json();
       
-      if (!res.ok) {
-        throw new Error(parsedData.message || "Resume upload failed");
-      }
-      
       return parsedData;
     } catch (error: any) {
       console.error("Error in uploading resume:", error);
@@ -248,6 +244,37 @@ export const getYourJobs = async () => {
         success: false, 
         error: error.message || "Unknown error",
         message: "Failed to upload and parse resume" 
+      };
+    }
+  };
+  
+  // In your user_actions.ts file, modify the uploadResume function:
+  export const saveUserData = async (data: any) => {
+    const token = await getCookie("token");
+    try {
+      console.log(data, "here is data")
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/info/update`,
+        {
+          method: "POST",
+          headers: {
+            Cookie: `token=${token}`,
+          },
+          body: data,
+          credentials: "include",
+        }
+      );
+      
+      const user = await res.json();
+      
+      return user;
+    } catch (error: any) {
+      console.error("Error in updating user:", error);
+      return { 
+        success: false, 
+        error: error.message || "Unknown error",
+        message: "Failed to update user information" 
       };
     }
   };

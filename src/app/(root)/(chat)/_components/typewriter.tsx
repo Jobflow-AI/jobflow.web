@@ -32,7 +32,7 @@ const TypewriterPlaceholder: React.FC<TypewriterPlaceholderProps> = ({
       const pauseTimeout = setTimeout(() => {
         setIsTypingPaused(false);
         setIsDeleting(true);
-      }, 2000); // Pause for 2 seconds before deleting
+      }, 2000); 
       
       return () => clearTimeout(pauseTimeout);
     }

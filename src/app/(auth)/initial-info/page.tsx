@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Upload, FileType, Edit, Save, Trash2, AlertCircle } from 'lucide-react'
 import Image from 'next/image'
-import { uploadResume } from '@/actions/user_actions'
+import { uploadResume, saveUserData } from '@/actions/user_actions'
 import { updateUser } from '@/actions/user_actions'
 
 interface ResumeData {
@@ -47,70 +47,6 @@ const Page = () => {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // Mock data for demonstration - we'll replace this with actual API data
-  const mockResumeData: ResumeData = {
-    personalInfo: {
-      name: "Alex Johnson",
-      email: "alex.johnson@example.com",
-      phone: "+1 (555) 123-4567",
-      location: "San Francisco, CA",
-      links: [
-        { type: "LinkedIn", url: "https://linkedin.com/in/alexjohnson" },
-        { type: "GitHub", url: "https://github.com/alexjohnson" },
-        { type: "Portfolio", url: "https://alexjohnson.dev" }
-      ]
-    },
-    summary: "Full-stack developer with 5+ years of experience building scalable web applications using React, Node.js, and AWS.",
-    experience: [
-      {
-        title: "Senior Frontend Developer",
-        company: "Tech Innovations Inc.",
-        location: "San Francisco, CA",
-        startDate: "2021-01",
-        endDate: "Present",
-        description: "Led a team of 5 developers to build a new customer-facing dashboard. Improved page load times by 40% through code optimization."
-      },
-      {
-        title: "Frontend Developer",
-        company: "Digital Solutions LLC",
-        location: "Oakland, CA",
-        startDate: "2018-06",
-        endDate: "2020-12",
-        description: "Developed responsive web applications using React and Redux. Collaborated with UX designers to implement new features."
-      }
-    ],
-    education: [
-      {
-        degree: "M.S. Computer Science",
-        institution: "Stanford University",
-        location: "Stanford, CA",
-        startDate: "2016",
-        endDate: "2018"
-      },
-      {
-        degree: "B.S. Computer Science",
-        institution: "UC Berkeley",
-        location: "Berkeley, CA",
-        startDate: "2012",
-        endDate: "2016"
-      }
-    ],
-    skills: ["JavaScript", "TypeScript", "React", "Node.js", "Express", "MongoDB", "AWS", "Docker", "GraphQL", "Redux"],
-    projects: [
-      {
-        name: "E-commerce Platform",
-        description: "Built a full-stack e-commerce platform with React, Node.js, and MongoDB.",
-        technologies: ["React", "Node.js", "Express", "MongoDB", "Stripe API"],
-        link: "https://github.com/alexjohnson/ecommerce"
-      },
-      {
-        name: "Task Management App",
-        description: "Developed a task management application with drag-and-drop functionality.",
-        technologies: ["React", "TypeScript", "Firebase", "Material-UI"],
-        link: "https://github.com/alexjohnson/taskmanager"
-      }
-    ]
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -132,6 +68,8 @@ const Page = () => {
       
       // Call the uploadResume action with FormData
       const response = await uploadResume(formData)
+
+      console.log(response, "here is the repnsose")
       
       setIsUploading(false)
       setIsParsing(true)
@@ -145,7 +83,7 @@ const Page = () => {
         setIsParsing(false)
         
         // Set the parsed data from the API response
-        setResumeData(response.data)
+        setResumeData(response.parsed_data)
       }, 1000)
     } catch (err: any) {
       setIsUploading(false)
@@ -155,17 +93,18 @@ const Page = () => {
     }
   }
 
+  console.log(resumeData,"this is resume data")
+
   const handleSave = async () => {
     if (!resumeData) return
     
     try {
       // Format the data as needed for your API
-      const userData = {
-        resume: resumeData,
-        // Add any other user data you want to update
-      }
+      const formData = new FormData();
+      formData.append('resume', JSON.stringify(resumeData));
       
-      const response = await updateUser(userData)
+      // Call saveUserData instead of updateUser
+      const response = await saveUserData(resumeData);
       
       if (!response.success) {
         throw new Error(response.message || "Failed to save resume data")
