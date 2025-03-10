@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react'
 import { Upload, FileType, Edit, Save, Trash2, AlertCircle } from 'lucide-react'
-import Image from 'next/image'
 import { uploadResume, saveUserData } from '@/actions/user_actions'
-import { updateUser } from '@/actions/user_actions'
+import { useAppDispatch } from '@/redux/hooks'
+import toast from 'react-hot-toast'
+import { userData } from '@/redux/slices/userSlice'
 
 interface ResumeData {
   personalInfo: {
@@ -46,6 +47,8 @@ const Page = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [resumeData, setResumeData] = useState<ResumeData | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  const dispatch = useAppDispatch()
 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,10 +112,11 @@ const Page = () => {
       if (!response.success) {
         throw new Error(response.message || "Failed to save resume data")
       }
+      dispatch(userData(response.user))
       
-      alert("Resume data saved successfully!")
+      toast.success("Resume data saved successfully!")
     } catch (err: any) {
-      setError(err.message || "An error occurred while saving your resume data")
+      toast.error(err.message || "An error occurred while saving your resume data")
       console.error("Resume save error:", err)
     }
   }
