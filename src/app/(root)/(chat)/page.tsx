@@ -12,12 +12,12 @@ export default function LandingPage() {
   const isLoggedIn = !!user; // Determine if user is logged in
 
   return (
-    <div className="min-h-screen overflow-auto">
+    <div className="">
       {/* Hero Section with Sidebar */}
       <HeroSection isLoggedIn={isLoggedIn} />
 
       {/* Feature Section - Only for logged-out users */}
-      {!isLoggedIn && <FeatureSection />}
+      {!user && <FeatureSection />}
     </div>
   );
 }

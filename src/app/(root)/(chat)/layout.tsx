@@ -30,9 +30,9 @@ export default function Layout({ children }: ChatLayoutProps) {
         {/* <Sidebar /> */}
         
         {/* Main content area with flexible layout */}
-        <div className="flex w-full overflow-hidden">
+        <div className="flex w-full">
           {/* Chat Window */}
-          <main className={`flex-1 overflow-hidden transition-all duration-300 ${isApplyPanelOpen ? 'pr-2' : ''}`}>
+          <main className={`flex-1 transition-all duration-300 ${isApplyPanelOpen ? 'pr-2' : ''}`}>
             {children}
           </main>
 
