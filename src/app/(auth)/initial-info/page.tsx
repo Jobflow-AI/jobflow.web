@@ -13,6 +13,7 @@ import Experience from './_components/experience'
 import Education from './_components/education'
 import Skills from './_components/skills'
 import Projects from './_components/projects'
+import { uploadFileToS3 } from '@/actions/s3_actions'; // Import the function
 
 interface ResumeData {
   personalInfo: {
@@ -65,42 +66,46 @@ const Page = () => {
   }
 
   const handleUpload = async () => {
-    if (!file) return
+    if (!file) return;
 
-    setIsUploading(true)
-    setError(null)
+    setIsUploading(true);
+    setError(null);
     
     try {
-      // Create FormData here instead of passing File directly
-      const formData = new FormData();
-      formData.append('resume', file);
-      
-      // Call the uploadResume action with FormData
-      const response = await uploadResume(formData)
-
-      console.log(response, "here is the response")
-      
-      setIsUploading(false)
-      setIsParsing(true)
-      
-      if (!response.success) {
-        throw new Error(response.message || "Failed to parse resume")
-      }
-      
-      // After a brief delay to show the parsing state
-      setTimeout(() => {
-        setIsParsing(false)
+        // Create FormData here instead of passing File directly
+        const formData = new FormData();
+        formData.append('resume', file);
         
-        // Set the parsed data from the API response
-        setResumeData(response.parsed_data)
-      }, 1000)
+        // Call the uploadResume action with FormData
+        const response = await uploadResume(formData);
+
+        console.log(response, "here is the response");
+
+        if (!response.success) {
+            throw new Error(response.message || "Failed to parse resume");
+        }
+
+        console.log(file, "here is the file")
+        // Use the upload URL from the response to upload the file to S3
+        await uploadFileToS3(file, response.upload_url);
+
+        setIsUploading(false);
+        setIsParsing(true);
+
+        // After a brief delay to show the parsing state
+        setTimeout(() => {
+            setIsParsing(false);
+            
+            // Set the parsed data from the API response
+            setResumeData(response.parsed_data);
+        }, 1000);
     } catch (err: any) {
-      setIsUploading(false)
-      setIsParsing(false)
-      setError(err.message || "An error occurred while uploading your resume")
-      console.error("Resume upload error:", err)
+        setIsUploading(false);
+        setIsParsing(false);
+        setError(err.message || "An error occurred while uploading your resume");
+        console.error("Resume upload error:", err);
     }
-  }
+};
 
   console.log(resumeData,"this is resume data")
 

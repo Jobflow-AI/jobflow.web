@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { renderJobCard } from "@/components/shared/jobCard";
+import { renderJobCard } from "./TrackerJobCard";
 import { getYourJobs, updateJobStatus, updateUser } from "@/actions/user_actions";
 import toast from "react-hot-toast";
 import CreateJobModel from "./CreateJobModel";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
+import { Header } from "./Header";
+import { Plus, MoreHorizontal } from 'lucide-react';
 
 interface Job {
   id: string;
@@ -184,85 +186,81 @@ export default function TrackerBoard() {
   };
 
   return (
-    <div className="flex flex-col w-full p-3 h-[91vh] overflow-y-hidden">
-      <div className="flex justify-between items-center my-3 sticky top-0">
-        <input
-          type="text"
-          placeholder="Search jobs..."
-          className="border rounded-md px-4 py-2 w-1/2"
-        />
-        <div className="flex gap-4">
-          <button className="btn-secondary" onClick={() => alert("Filter functionality here")}>
-            Filter
-          </button>
-          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
-            Create Job
-          </button>
-        </div>
-      </div>
+    <div className="flex flex-col w-full p-6 h-[91vh] overflow-y-hidden">
+      <Header/>
 
-      <div className="overflow-auto w-full h-full">
+      <div className="overflow-auto w-full h-full mt-6">
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className="flex w-full gap-4 h-full">
+          <div className="flex w-full gap-6 h-full">
             {columnNames.map((listName, index) => (
               <Droppable droppableId={listName} key={listName}>
                 {(provided) => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="border rounded-md p-4 bg-gray-100 min-w-[250px] h-full overflow-auto relative group"
+                    className="flex-1 min-w-[200px] bg-[#17161c] rounded-3xl p-4 h-full overflow-auto relative group"
                   >
-                    <div className="flex justify-between">
-                      <input
-                        type="text"
-                        value={columnInputValues[index]}
-                        onChange={(e) => handleInputChange(index, e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleColumnNameChange(index, e.currentTarget.value);
-                          }
-                        }}
-                        className="font-bold capitalize bg-transparent focus:bg-slate-200 focus:p-1"
-                      />
-                      <button onClick={() => handleRemoveColumn(index, listName)} className="hover:bg-slate-300">✖️</button>
-                    </div>
-                    {tasks[listName]?.length === 0 && (
-                      <div 
-                        className="inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={columnInputValues[index]}
+                          onChange={(e) => handleInputChange(index, e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleColumnNameChange(index, e.currentTarget.value);
+                            }
+                          }}
+                          className="text-sm font-semibold text-gray-300 bg-transparent focus:bg-[#353345] focus:p-1 rounded focus:outline-none"
+                        />
+                        <span className="text-sm text-gray-500">
+                          {tasks[listName]?.length || 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
                         <button
-                          className="w-full my-3 bg-gray-300 p-1 rounded-sm"
+                          className="p-1 hover:bg-[#353345] rounded transition-colors"
                           onClick={() => {
                             setCurrentColumnName(listName);
                             setIsModalOpen(true);
                           }}
                         >
-                          Create Job ➕
+                          <Plus className="w-4 h-4 text-gray-400" />
+                        </button>
+                        <button 
+                          onClick={() => handleRemoveColumn(index, listName)} 
+                          className="p-1 hover:bg-[#353345] rounded transition-colors"
+                        >
+                          <MoreHorizontal className="w-4 h-4 text-gray-400" />
                         </button>
                       </div>
-                    )}
-                    {tasks[listName]?.map((job: Job, index: number) => {
-                      console.log(job, "here is job inside map")
-                      return<Draggable draggableId={job.id} index={index} key={job.id}>
-                        {(provided) => (
-                          <div
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                            className="my-3"
-                          >
-                            {renderJobCard(job, "", true)}
-                          </div>
-                        )}
-                      </Draggable>
-})}
-                    {provided.placeholder}
+                    </div>
+
+                    <div className="space-y-3">
+                      {tasks[listName]?.map((job: Job, index: number) => (
+                        <Draggable draggableId={job.id} index={index} key={job.id}>
+                          {(provided) => (
+                            <div
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                            >
+                              {renderJobCard(job)}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
                   </div>
                 )}
               </Droppable>
             ))}
-            <button onClick={handleAddColumn} className="px-2 bg-gray-400">
-              ➕
+            <button 
+              onClick={handleAddColumn} 
+              className="p-2 h-10 bg-[#2F2D3B] text-gray-400 hover:bg-[#353345] rounded-lg transition-colors"
+            >
+              <Plus className="w-5 h-5" />
             </button>
           </div>
         </DragDropContext>

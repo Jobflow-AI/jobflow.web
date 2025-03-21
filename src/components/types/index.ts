@@ -39,3 +39,32 @@ type UserJob = {
     userId: string; // UUID
     companyId?: string; // optional, UUID
   };
+
+
+  export interface Task {
+    id: string;
+    title: string;
+    description: string;
+    priority: 'Low' | 'Medium' | 'High';
+    date: string;
+    assignees: User[];
+  }
+  
+  export interface User {
+    id: string;
+    name: string;
+    avatar: string;
+  }
+  
+  export interface Column {
+    id: string;
+    title: string;
+    count: number;
+    tasks: Task[];
+  }
+  
+  export interface Tag {
+    id: string;
+    name: string;
+    color: string;
+  }
