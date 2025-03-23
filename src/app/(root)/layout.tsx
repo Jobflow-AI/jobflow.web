@@ -1,5 +1,5 @@
 import { getUser } from "@/actions/user_actions";
-import Navbar from "@/components/shared/Navbar";
+import Sidebar from "@/components/shared/Sidebar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,11 +17,18 @@ export default async function MainLayout({
 
   return (
     <>
-        {/* <Navbar user={data?.user}/> */}
-        <div className="flex flex-col flex-wrap items-center justify-center">
-          <Navbar />
+      {/* Navbar at the top */}
+      
+      <div className="flex overflow-hidden">
+        {/* Sidebar fixed on the left */}
+        <div className="fixed top-0 left-0 h-full w-16 bg-transparent">
+          <Sidebar />
+        </div>
+        {/* Main content area for children */}
+        <div className="ml-16 p-4 w-full">
           {children}
         </div>
+      </div>
     </>
   );
 }

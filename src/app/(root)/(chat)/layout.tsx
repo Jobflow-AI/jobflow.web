@@ -3,6 +3,7 @@ import Sidebar from './_components/sidebar';
 import { ReactNode, useState, createContext } from 'react';
 import { AnimatePresence } from "framer-motion";
 import ApplyPanel from './_components/apply-panel';
+import Navbar from './_components/Navbar';
 
 // Create context to manage panel state across components
 export const ApplyPanelContext = createContext({
@@ -25,6 +26,7 @@ export default function Layout({ children }: ChatLayoutProps) {
       setIsApplyPanelOpen,
       currentJob
     }}>
+      <Navbar/>
       <div className="flex gap-2 h-screen w-full p-4">
         {/* Sidebar or Chat List */}
         {/* <Sidebar /> */}

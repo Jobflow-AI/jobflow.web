@@ -151,7 +151,7 @@ const ChatInput = ({ isLoggedIn, onSubmit, setShowResumePopup }: {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-[#050505] text-white p-4 overflow-hidden">
+    <div className="flex flex-col items-center justify-center text-white p-4 overflow-hidden">
       <div className="w-full mx-auto z-10 px-4 animate-fade-in">
         {/* Form Container */}
         <form onSubmit={handleFormSubmit} className="w-full">

@@ -60,6 +60,7 @@ export default function TrackerBoard() {
   const fetchJobs = async () => {
     try {
       const data = await getYourJobs();
+      console.log(data, "here data");
       if (Array.isArray(data?.jobs)) {
         const organizedJobs = user?.job_statuses.reduce((acc: Tasks, statusObj: { label: string; value: number }) => {
           acc[statusObj.label] = data.jobs.filter((job: Job) => job.status === statusObj.label);
@@ -186,19 +187,19 @@ export default function TrackerBoard() {
   };
 
   return (
-    <div className="flex flex-col w-full p-6 h-[91vh] overflow-y-hidden">
-      <Header/>
+    <div className="flex flex-col w-full h-[91vh] overflow-hidden pl-8">
+      <Header />
 
-      <div className="overflow-auto w-full h-full mt-6">
+      <div className="flex-1 overflow-hidden mt-3">
         <DragDropContext onDragEnd={onDragEnd}>
-          <div className="flex w-full gap-6 h-full">
+          <div className="flex gap-6 w-full h-full overflow-x-auto">
             {columnNames.map((listName, index) => (
               <Droppable droppableId={listName} key={listName}>
                 {(provided) => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="flex-1 min-w-[200px] bg-[#17161c] rounded-3xl p-4 h-full overflow-auto relative group"
+                    className="min-w-[300px] bg-[#17161c] rounded-3xl p-4 h-full overflow-auto relative group"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
@@ -245,7 +246,7 @@ export default function TrackerBoard() {
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
                             >
-                              {renderJobCard(job)}
+                              {renderJobCard(job.job)}
                             </div>
                           )}
                         </Draggable>
