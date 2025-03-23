@@ -121,6 +121,110 @@ export const updateUser = async (data: any) => {
     }
   };
 
+export const addUserJobStatuses = async (data: any) => {
+    const token = await getCookie("token");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/jobstatus/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `token=${token}`,
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+        }
+      );
+  
+      const response = await res.json();
+      revalidateTag('userData');
+      
+      // Add user data to response
+      const userResponse = await getUser();
+      return { 
+        ...response,
+        user: userResponse.user 
+      };
+      
+    } catch (error: unknown) {
+      console.error("Error adding job status:", error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      };
+    }
+};
+
+// Apply the same pattern to update and delete functions
+export const updateUserJobStatuses = async (id: string, data: any) => {
+    const token = await getCookie("token");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/jobstatus/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `token=${token}`,
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+        }
+      );
+  
+      const response = await res.json();
+      revalidateTag('userData');
+      
+      // Add fresh user data
+      const userResponse = await getUser();
+      return { 
+        ...response,
+        user: userResponse.user 
+      };
+      
+    } catch (error: unknown) {
+      console.error("Error updating job status:", error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      };
+    }
+};
+
+export const deleteUserJobStatuses = async (id: string) => {
+    const token = await getCookie("token");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/jobstatus/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Cookie: `token=${token}`,
+          },
+          credentials: "include",
+        }
+      );
+  
+      const response = await res.json();
+      revalidateTag('userData');
+      
+      // Get updated user data
+      const userResponse = await getUser();
+      return { 
+        ...response,
+        user: userResponse.user 
+      };
+      
+    } catch (error: unknown) {
+      console.error("Error deleting job status:", error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : "Unknown error" 
+      };
+    }
+};
+
 export const getYourJobs = async () => {
     const token = await getCookie("token");
     try {

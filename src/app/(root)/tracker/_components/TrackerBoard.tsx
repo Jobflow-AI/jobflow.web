@@ -3,13 +3,20 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { renderJobCard } from "./TrackerJobCard";
-import { getYourJobs, updateJobStatus, updateUser } from "@/actions/user_actions";
+import { 
+  getYourJobs, 
+  updateJobStatus, 
+  updateUser, 
+  addUserJobStatuses, 
+  deleteUserJobStatuses,
+  updateUserJobStatuses  // Add this import
+} from "@/actions/user_actions";
 import toast from "react-hot-toast";
 import CreateJobModel from "./CreateJobModel";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { Header } from "./Header";
-import { Plus, MoreHorizontal } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 
 interface Job {
   id: string;
@@ -28,7 +35,7 @@ export default function TrackerBoard() {
   const [tasks, setTasks] = useState<Tasks>({});
   const [columnNames, setColumnNames] = useState<string[]>([]);
   const [columnInputValues, setColumnInputValues] = useState<string[]>([]);
-
+  const [jobsCache, setJobsCache] = useState<Job[]>([]);
 
   const [newJob, setNewJob] = useState({
     title: "",
@@ -43,9 +50,11 @@ export default function TrackerBoard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentColumnName, setCurrentColumnName] = useState<string>("");
 
+  // Modify initializeTasks to preserve jobs
   const initializeTasks = () => {
     const initialTasks = user?.job_statuses.reduce((acc: Tasks, statusObj: { label: string; value: number }) => {
-      acc[statusObj.label] = [];
+      // Preserve existing jobs if column already exists
+      acc[statusObj.label] = tasks[statusObj.label] || [];
       return acc;
     }, {});
     setTasks(initialTasks || {});
@@ -53,37 +62,61 @@ export default function TrackerBoard() {
     setColumnInputValues(user?.job_statuses.map(status => status.label) || []);
   };
 
-  useEffect(() => {
-    initializeTasks();
-  }, [user]);
-
+  // Update fetchJobs to merge with cache
   const fetchJobs = async () => {
     try {
       const data = await getYourJobs();
-      console.log(data, "here data");
-      if (Array.isArray(data?.jobs)) {
-        const organizedJobs = user?.job_statuses.reduce((acc: Tasks, statusObj: { label: string; value: number }) => {
-          acc[statusObj.label] = data.jobs.filter((job: Job) => job.status === statusObj.label);
+      if (data?.success && Array.isArray(data.jobs)) {
+        setJobsCache(data.jobs);
+        const organizedJobs = user?.job_statuses.reduce((acc: Tasks, statusObj) => {
+          acc[statusObj.label] = data.jobs.filter((job: { status: string }) => job.status === statusObj.label);
           return acc;
         }, {});
-        setTasks(organizedJobs || {});
-      } else {
-        console.error("Unexpected data format", data);
+        // Merge with existing tasks
+        setTasks(prev => ({ ...prev, ...organizedJobs }));
       }
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
   };
 
+  // Update useEffect dependencies
   useEffect(() => {
-    fetchJobs();
+    initializeTasks();
+    // Fetch jobs only on initial mount or when jobs change
+  }, []); // Remove user dependency
+
+  useEffect(() => {
+    // Only refresh jobs when modal closes (new job added)
+    if (!isModalOpen) {
+      fetchJobs();
+    }
   }, [isModalOpen]);
 
+  // Update column handlers to preserve jobs
   const handleAddColumn = () => {
     const newColumnName = `new-column-${columnNames.length + 1}`;
+    const updatedColumnNames = [...columnNames, newColumnName];
+    
     setTasks({ ...tasks, [newColumnName]: [] });
-    setColumnNames([...columnNames, newColumnName]);
+    setColumnNames(updatedColumnNames);
     setColumnInputValues([...columnInputValues, newColumnName]);
+  
+    // Only send the new column data
+    addUserJobStatuses({ 
+      label: newColumnName,
+      value: 0 // Initial value for new column
+    }).then(response => {
+      if (response.success) {
+        toast.success("Column added successfully");
+        dispatch(userData(response.user));
+      } else {
+        toast.error("Failed to add column");
+      }
+    }).catch(error => {
+      console.error("Error adding column:", error);
+      toast.error("Error adding column");
+    });
   };
 
   const handleColumnNameChange = (index: number, newName: string) => {
@@ -91,25 +124,33 @@ export default function TrackerBoard() {
     const oldName = updatedColumnNames[index];
     updatedColumnNames[index] = newName;
     setColumnNames(updatedColumnNames);
-
+  
     const updatedTasks = { ...tasks, [newName]: tasks[oldName] };
     delete updatedTasks[oldName];
     setTasks(updatedTasks);
-
-    const updatedStatuses = updatedColumnNames.map(label => ({ label, value: tasks[label]?.length || 0 }));
-    updateUser({ job_statuses: updatedStatuses })
-      .then(response => {
-        if (response.success) {
-          toast.success("Column name updated successfully");
-          dispatch(userData(response.user));
-        } else {
-          toast.error("Failed to update column name");
-        }
-      })
-      .catch(error => {
-        console.error("Error updating column name:", error);
-        toast.error("Error updating column name");
-      });
+  
+    // Find the existing status to get its ID
+    const existingStatus = user?.job_statuses.find(js => js.label === oldName);
+    if (!existingStatus) {
+      toast.error("Column not found");
+      return;
+    }
+  
+    // Update with status ID and new data
+    updateUserJobStatuses(existingStatus.id, {
+      label: newName,
+      value: tasks[oldName]?.length || 0
+    }).then(response => {
+      if (response.success) {
+        toast.success("Column name updated successfully");
+        dispatch(userData(response.user));
+      } else {
+        toast.error("Failed to update column name");
+      }
+    }).catch(error => {
+      console.error("Error updating column name:", error);
+      toast.error("Error updating column name");
+    });
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -123,29 +164,36 @@ export default function TrackerBoard() {
       toast.error("Cannot remove a column that is not empty");
       return;
     }
-
-    const updatedTasks = { ...tasks };
-    delete updatedTasks[name];
-    setTasks(updatedTasks);
-
-    const updatedColumnNames = columnNames.filter((_, i) => i !== index);
-    const updatedColumnInputValues = columnInputValues.filter((_, i) => i !== index);
-    setColumnNames(updatedColumnNames);
-    setColumnInputValues(updatedColumnInputValues);
-
-    const updatedStatuses = updatedColumnNames.map(label => ({ label, value: tasks[label]?.length || 0 }));
-    updateUser({ job_statuses: updatedStatuses })
+  
+    // Find the job status ID to delete
+    const statusToDelete = user?.job_statuses.find(js => js.label === name);
+    if (!statusToDelete) {
+      toast.error("Column not found");
+      return;
+    }
+  
+    deleteUserJobStatuses(statusToDelete.id)
       .then(response => {
         if (response.success) {
+          // Update local state
+          const updatedTasks = { ...tasks };
+          delete updatedTasks[name];
+          setTasks(updatedTasks);
+  
+          const updatedColumnNames = columnNames.filter((_, i) => i !== index);
+          const updatedColumnInputValues = columnInputValues.filter((_, i) => i !== index);
+          setColumnNames(updatedColumnNames);
+          setColumnInputValues(updatedColumnInputValues);
+  
           toast.success("Column removed successfully");
           dispatch(userData(response.user));
         } else {
-          toast.error("Failed to update user data");
+          toast.error("Failed to delete column");
         }
       })
       .catch(error => {
-        console.error("Error updating user data:", error);
-        toast.error("Error updating user data");
+        console.error("Error deleting column:", error);
+        toast.error("Error deleting column");
       });
   };
 
@@ -173,7 +221,10 @@ export default function TrackerBoard() {
 
     setTasks(updatedTasks);
 
-    const data = await updateJobStatus(removed.id, destination.droppableId); 
+    const data = await updateJobStatus(removed.id, destination.droppableId);
+    
+    // Refresh jobs after status update
+    await fetchJobs();  // Add this line
 
     const updatedStatuses = columnNames.map(label => ({ label, value: updatedTasks[label]?.length || 0 }));
     updateUser({ job_statuses: updatedStatuses })
@@ -232,7 +283,7 @@ export default function TrackerBoard() {
                           onClick={() => handleRemoveColumn(index, listName)} 
                           className="p-1 hover:bg-[#353345] rounded transition-colors"
                         >
-                          <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                          <Minus className="w-4 h-4 text-gray-400" />
                         </button>
                       </div>
                     </div>
@@ -277,3 +328,4 @@ export default function TrackerBoard() {
     </div>
   );
 }
+

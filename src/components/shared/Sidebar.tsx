@@ -4,7 +4,6 @@ import { useAppSelector } from '@/redux/hooks';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { FaClipboardList, FaCalendarAlt, FaHandshake, FaUsers } from 'react-icons/fa';
 import { HiOutlineHome } from "react-icons/hi";
 import { MdOutlineViewKanban } from "react-icons/md";
 import { LuLayoutDashboard } from "react-icons/lu";

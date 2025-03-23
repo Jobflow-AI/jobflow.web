@@ -1,4 +1,5 @@
 type JobStatus = {
+    id: string
     label: string;
     value: number;
   };
