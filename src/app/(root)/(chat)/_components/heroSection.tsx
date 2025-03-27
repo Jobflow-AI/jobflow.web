@@ -1,33 +1,40 @@
-import React, { useRef, useState, useEffect } from 'react';
-import Image from 'next/image';
-import { FaPaperclip, FaUpload, FaGlobe, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
-import { useGoogleLogin } from '@react-oauth/google';
-import { useAppDispatch } from '@/redux/hooks';
-import axios from 'axios';
-import { userData } from '@/redux/slices/userSlice';
-import toast from 'react-hot-toast';
-import { Loader2, SparklesIcon } from 'lucide-react';
-import JobSearchResults from './job-result';
-import QueryLimitPopup from './QueryLimitPopup'; 
-import ResumeUploadPopup from './ResumeUploadPopup'; // Import the new component
-import ChatInput from './chatinput';
-import { Button } from '@/components/ui/button';
-import { fetchJobs } from "@/actions/chat_actions"
+import React, { useRef, useState, useEffect } from "react";
+import Image from "next/image";
+import {
+  FaPaperclip,
+  FaUpload,
+  FaGlobe,
+  FaTwitter,
+  FaLinkedin,
+  FaGithub,
+} from "react-icons/fa";
+import { useGoogleLogin } from "@react-oauth/google";
+import { useAppDispatch } from "@/redux/hooks";
+import axios from "axios";
+import { userData } from "@/redux/slices/userSlice";
+import toast from "react-hot-toast";
+import { Loader2, SparklesIcon } from "lucide-react";
+import JobSearchResults from "./job-result";
+import QueryLimitPopup from "./QueryLimitPopup";
+import ResumeUploadPopup from "./ResumeUploadPopup"; // Import the new component
+import ChatInput from "./chatinput";
+import { Button } from "@/components/ui/button";
+import { fetchJobs } from "@/actions/chat_actions";
 
 const QUERY_LIMIT = 5;
-const STORAGE_KEY = 'userQueryCount';
+const STORAGE_KEY = "userQueryCount";
 
 const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [queryCount, setQueryCount] = useState(0);
   const [showPopup, setShowPopup] = useState(false); // State to control query limit popup
   const [showResumePopup, setShowResumePopup] = useState(false); // New state for resume popup
-  const [jobApiData, setJobApiData] = useState<any>(null)
-  const [isApiLoading, setIsApiLoading] = useState(false)
+  const [jobApiData, setJobApiData] = useState<any>(null);
+  const [isApiLoading, setIsApiLoading] = useState(false);
 
   useEffect(() => {
     const storedCount = localStorage.getItem(STORAGE_KEY);
@@ -35,7 +42,7 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       setQueryCount(parseInt(storedCount, 10));
     }
   }, []);
-  
+
   console.log("Results state:", showResults);
 
   useEffect(() => {
@@ -45,7 +52,7 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const handleCloseResults = () => {
     console.log("Closing job results");
     setShowResults(false);
-    setQuery('');
+    setQuery("");
     setJobApiData(null);
   };
 
@@ -61,7 +68,7 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     console.log("Chat submit triggered with text:", inputText);
     setQuery(inputText);
     setIsApiLoading(true);
-    
+
     try {
       console.log("Calling fetchJobs with:", inputText);
       // Call the API with the chat input
@@ -76,8 +83,8 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       setIsApiLoading(false);
       setShowResults(true);
     }
-    
-    setQueryCount(prevCount => {
+
+    setQueryCount((prevCount) => {
       const newCount = prevCount + 1;
       console.log("New query count:", newCount);
       if (newCount >= QUERY_LIMIT) {
@@ -88,26 +95,30 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col overflow-auto">
       {/* Ray Container with multiple light rays */}
-      <div 
-          className="fixed inset-0 pointer-events-none select-none"
-          style={{
-            '--gradient-opacity': '.85',
-            '--ray-gradient': 'radial-gradient(rgb(83 255 233 / 85%) 0%, rgba(43, 166, 255, 0) 100%)',
-            transition: 'opacity 0.25s linear',
-          } as React.CSSProperties}
-        >
+      <div
+        className="fixed inset-0 pointer-events-none select-none"
+        style={
+          {
+            "--gradient-opacity": ".85",
+            "--ray-gradient":
+              "radial-gradient(rgb(83 255 233 / 85%) 0%, rgba(43, 166, 255, 0) 100%)",
+            transition: "opacity 0.25s linear",
+          } as React.CSSProperties
+        }
+      >
         {/* Light Rays (existing code) */}
-        <div className="absolute rounded-full" 
+        <div
+          className="absolute rounded-full"
           style={{
-            background: 'var(--ray-gradient)',
-            width: '480px',
-            height: '680px',
-            transform: 'rotate(80deg)',
-            top: '-540px',
-            left: '250px',
-            filter: 'blur(110px)'
+            background: "var(--ray-gradient)",
+            width: "480px",
+            height: "680px",
+            transform: "rotate(80deg)",
+            top: "-540px",
+            left: "250px",
+            filter: "blur(110px)",
           }}
         />
         {/* Other light rays... */}
@@ -116,82 +127,180 @@ const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       {/* Conditional Rendering for Hero Content or Job Search Results */}
       {showResults && queryCount < QUERY_LIMIT ? (
         <>
-          <JobSearchResults 
-            query={query} 
-            onClose={handleCloseResults} 
+          <JobSearchResults
+            query={query}
+            onClose={handleCloseResults}
             apiData={jobApiData}
             isLoading={isApiLoading}
           />
           {/* Chat input below job results */}
-          <div className='w-[60%] mx-auto mt-4'>
-            <ChatInput 
-              isLoggedIn={isLoggedIn} 
-              onSubmit={handleChatSubmit} 
+          <div className="w-[60%] mx-auto mt-4">
+            <ChatInput
+              isLoggedIn={isLoggedIn}
+              onSubmit={handleChatSubmit}
               setShowResumePopup={setShowResumePopup} // Pass the first signup handler
             />
           </div>
         </>
       ) : (
         <div className="flex-1 flex flex-col items-center text-center mt-2 px-4">
-      {!showResults || queryCount >= QUERY_LIMIT ? (
-        // Show hero content when no results or query limit reached
-        <>
-          <div className="flex justify-center mt-4 mb-[10%]">
-            <Button variant="outline" className="rounded-full bg-black/50 border-gray-700 hover:bg-black/70 text-white">
-              <SparklesIcon className="w-4 h-4 mr-2" />
-              Introducing Chrome Extension for Contextual AutoFilling 
-            </Button>
+          {!showResults || queryCount >= QUERY_LIMIT ? (
+            // Show hero content when no results or query limit reached
+            <>
+              <div className="flex justify-center mt-4 mb-[10%]">
+                <Button
+                  variant="outline"
+                  className="rounded-full bg-black/50 border-gray-700 hover:bg-black/70 text-white"
+                >
+                  <SparklesIcon className="w-4 h-4 mr-2" />
+                  Introducing Chrome Extension for Contextual AutoFilling
+                </Button>
+              </div>
+              <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                Find and apply jobs in seconds.
+              </h1>
+              <p className="text-gray-400 text-lg mb-8 max-w-2xl">
+                Jobflow is your JobGpt. Start for free today.
+              </p>
+            </>
+          ) : (
+            // Show job results when results should be displayed
+            <div className="w-full mb-8">
+              <JobSearchResults
+                query={query}
+                onClose={handleCloseResults}
+                apiData={jobApiData}
+                isLoading={isApiLoading}
+              />
+            </div>
+          )}
+
+          {/* Chat input always visible */}
+          <div className="w-[60%]">
+            <ChatInput
+              isLoggedIn={isLoggedIn}
+              onSubmit={handleChatSubmit}
+              setShowResumePopup={setShowResumePopup} // Pass the first signup handler
+            />
           </div>
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Find and apply jobs in seconds.
-          </h1>
-          <p className="text-gray-400 text-lg mb-8 max-w-2xl">
-            Jobflow is your JobGpt. Start for free today.
-          </p>
-        </>
-      ) : (
-        // Show job results when results should be displayed
-        <div className="w-full mb-8">
-          <JobSearchResults 
-            query={query} 
-            onClose={handleCloseResults} 
-            apiData={jobApiData}
-            isLoading={isApiLoading}
-          />
+
+          {/* Only show suggestion buttons when no results */}
+          {(!showResults || queryCount >= QUERY_LIMIT) && (
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
+              {[
+                "Recharts dashboard",
+                "Habit tracker",
+                "Real estate listings",
+                "Developer portfolio",
+              ].map((item) => (
+                <button
+                  key={item}
+                  className="bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg px-5 py-2 text-sm font-medium"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
+          <div>
+            {/* Main container */}
+            <div className="min-h-screen flex flex-col">
+              {/* Conditional Rendering for Hero Content or Job Search Results */}
+              {showResults && queryCount < QUERY_LIMIT ? (
+                <>
+                  <JobSearchResults
+                    query={query}
+                    onClose={handleCloseResults}
+                    apiData={jobApiData}
+                    isLoading={isApiLoading}
+                  />
+                  <div className="w-[60%] mx-auto mt-4">
+                    <ChatInput
+                      isLoggedIn={isLoggedIn}
+                      onSubmit={handleChatSubmit}
+                      setShowResumePopup={setShowResumePopup}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1 flex flex-col items-center text-center mt-2 px-4">
+                  <div className="flex justify-center mt-4 mb-[10%]">
+                    <Button
+                      variant="outline"
+                      className="rounded-full bg-black/50 border-gray-700 hover:bg-black/70 text-white"
+                    >
+                      <SparklesIcon className="w-4 h-4 mr-2" />
+                      Introducing Chrome Extension for Contextual AutoFilling
+                    </Button>
+                  </div>
+                  <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                    Find and apply jobs in seconds.
+                  </h1>
+                  <p className="text-gray-400 text-lg mb-8 max-w-2xl">
+                    Jobflow is your JobGpt. Start for free today.
+                  </p>
+                </div>
+              )}
+              <div className="overflow-auto h-screen mt-16 text-center max-w-4xl mx-auto">
+                <h2 className="text-4xl font-bold text-white">
+                  Build high-quality software <br /> without writing code.
+                </h2>
+                <p className="text-gray-400 mt-4">
+                  Creating software has never been more accessible. With Jobflow
+                  AI, simply describe your job search needs, and we’ll handle
+                  the rest.
+                </p>
+
+                <div className="flex flex-col md:flex-row items-center mt-10 gap-8">
+                  <div className="md:w-1/2 text-left">
+                    <h3 className="text-2xl text-white font-semibold">
+                      🚀 20× faster job search
+                    </h3>
+                    <p className="text-gray-400 mt-2">
+                      Use simple queries to find relevant job openings
+                      instantly, powered by AI-driven matching.
+                    </p>
+
+                    <h3 className="text-2xl text-white font-semibold mt-6">
+                      💡 Instant Edits
+                    </h3>
+                    <p className="text-gray-400 mt-2">
+                      Customize and refine job searches effortlessly with
+                      real-time updates.
+                    </p>
+
+                    <h3 className="text-2xl text-white font-semibold mt-6">
+                      🔗 You control the data
+                    </h3>
+                    <p className="text-gray-400 mt-2">
+                      Sync your searches with job boards or export results for
+                      deeper analysis.
+                    </p>
+                  </div>
+
+                  <div className="md:w-1/2">
+                    <img
+                      src="https://media.istockphoto.com/id/537331500/photo/programming-code-abstract-technology-background-of-software-deve.jpg?s=1024x1024&w=is&k=20&c=ffZ9DMUWJuqSOgFds4ltM_71PRVfBBu5vhPznWewDOM="
+                      alt="Job search dashboard"
+                      width={500}
+                      height={350}
+                      className="rounded-lg shadow-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
-      
-      {/* Chat input always visible */}
-      <div className='w-[60%]'>
-        <ChatInput 
-          isLoggedIn={isLoggedIn} 
-          onSubmit={handleChatSubmit} 
-          setShowResumePopup={setShowResumePopup} // Pass the first signup handler
-        />
-      </div>
-      
-      {/* Only show suggestion buttons when no results */}
-      {(!showResults || queryCount >= QUERY_LIMIT) && (
-        <div className="flex flex-wrap justify-center gap-3 mt-6">
-          {['Recharts dashboard', 'Habit tracker', 'Real estate listings', 'Developer portfolio'].map((item) => (
-            <button
-              key={item}
-              className="bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg px-5 py-2 text-sm font-medium"
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      )}
-      </div>
-      )}
-      
+
       {/* Query Limit Popup */}
       {showPopup && <QueryLimitPopup onClose={handleClosePopup} />}
-      
+
       {/* Resume Upload Popup - show only after first signup */}
-      {showResumePopup && <ResumeUploadPopup onClose={handleCloseResumePopup} />}
-      
+      {showResumePopup && (
+        <ResumeUploadPopup onClose={handleCloseResumePopup} />
+      )}
       {/* Loading overlay */}
       {isApiLoading && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
