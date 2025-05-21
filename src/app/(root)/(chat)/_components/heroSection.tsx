@@ -14,7 +14,7 @@ import ChatInput from './chatinput';
 import { Button } from '@/components/ui/button';
 import { fetchJobs } from "@/actions/chat_actions"
 
-const QUERY_LIMIT = 5;
+const QUERY_LIMIT = 5678;
 const STORAGE_KEY = 'userQueryCount';
 
 const HeroSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {

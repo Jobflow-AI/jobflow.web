@@ -51,7 +51,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, selectedIndex, onSelectJob }) =
             onClick={() => onSelectJob(index)}
           >
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-zinc-600 rounded-full flex items-center justify-center mr-3">
+              <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center mr-3">
                 {job.logo ? (
                   <img src={job.logo || "/placeholder.svg"} alt={job.name} className="w-8 h-8 rounded-full" />
                 ) : (

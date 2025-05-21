@@ -84,6 +84,8 @@ const Page = () => {
         if (!response.success) {
             throw new Error(response.message || "Failed to parse resume");
         }
+        setResumeData(response.parsed_data);
+
 
         console.log(file, "here is the file")
         // Use the upload URL from the response to upload the file to S3
@@ -97,7 +99,6 @@ const Page = () => {
             setIsParsing(false);
             
             // Set the parsed data from the API response
-            setResumeData(response.parsed_data);
         }, 1000);
     } catch (err: any) {
         setIsUploading(false);
@@ -113,12 +114,38 @@ const Page = () => {
     if (!resumeData) return
     
     try {
-      // Format the data as needed for your API
-      const formData = new FormData();
-      formData.append('resume', JSON.stringify(resumeData));
+      // Format the data into sections
+      const formattedData = {
+        sections: [
+          {
+            sectionType: "PERSONAL_INFO",
+            content: [resumeData.personalInfo]
+          },
+          {
+            sectionType: "SUMMARY",
+            content: [{ text: resumeData.summary }]
+          },
+          {
+            sectionType: "EXPERIENCE",
+            content: resumeData.experience
+          },
+          {
+            sectionType: "EDUCATION",
+            content: resumeData.education
+          },
+          {
+            sectionType: "SKILLS",
+            content: [{ skills: resumeData.skills }]
+          },
+          {
+            sectionType: "PROJECTS",
+            content: resumeData.projects
+          }
+        ]
+      };
       
-      // Call saveUserData instead of updateUser
-      const response = await saveUserData(resumeData);
+      // Call saveUserData with formatted data
+      const response = await saveUserData(formattedData);
       
       if (!response.success) {
         throw new Error(response.message || "Failed to save resume data")

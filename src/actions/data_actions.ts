@@ -1,3 +1,6 @@
+'use server'
+
+import { getCookie } from "./get_cookie";
 
 export const scrapeAndCreateJobs = async() => {
     try {
@@ -29,6 +32,7 @@ export const scrapeAndCreateJobs = async() => {
 
 
 export const getJobData = async(page=1, portal='', title='') => {
+    // const token = await getCookie("token");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/job/get?page=${page}&portal=${portal}&title=${title}`,
@@ -36,6 +40,7 @@ export const getJobData = async(page=1, portal='', title='') => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            // "Authorization": `Bearer ${token}`,
           },
           credentials: "include",
           cache: "no-cache",
@@ -94,6 +99,7 @@ export const getJobById = async(jobId: string) => {
 }
 
 export const scrapeJob = async(portal: string, url: string) => {
+    // const token = await getCookie("token");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/job/scrape?portal=${portal}&url=${url}`,
@@ -101,6 +107,7 @@ export const scrapeJob = async(portal: string, url: string) => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            // "Authorization": `Bearer ${token}`,
           },
           credentials: "include",
         }
@@ -121,6 +128,7 @@ export const scrapeJob = async(portal: string, url: string) => {
 }
 
 export const getCompaniesList = async() => {
+    // const token = await getCookie("token");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/job/get/company/list`,
@@ -128,9 +136,9 @@ export const getCompaniesList = async() => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            // "Authorization": `Bearer ${token}`,
           },
           credentials: "include",
-          // cache: "force-cache",
           next: {
             tags: ["companyData"],
           },

@@ -32,6 +32,13 @@ export interface Company {
     source: string
     source_logo: string | null
     title: string
+    match_analysis: {
+      analysis: string
+      experience_match: boolean
+      match_percentage: number
+      matched_skills: string[]
+      missing_skills: string[]
+    }
   }
   
   

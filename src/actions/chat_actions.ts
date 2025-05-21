@@ -1,3 +1,5 @@
+'use server'
+
 import type { Job } from "@/types/job"
 import { getCookie } from "./get_cookie";
 
@@ -10,13 +12,13 @@ export const fetchJobs = async (chatdata: any) => {
   const token = await getCookie("token");
   
   try {    
-    const response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat?mock=true`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: `token=${token}`,
+        "Authorization": `Bearer ${token}`,
       },
-      credentials: "include", // Include credentials for cross-origin requests
+      credentials: "include",
       body: JSON.stringify({
         question: chatdata,
       }),

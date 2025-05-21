@@ -72,10 +72,9 @@ export const getUser = async () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
-          },
+            "Authorization": `Bearer ${token}`,          },
           credentials: "include",
-          cache: "force-cache",
+          // cache: "force-cache",
           next: {
             tags: ["userData"],
           },
@@ -99,9 +98,8 @@ export const updateUser = async (data: any) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
-          body: JSON.stringify(data),
           credentials: "include",
         }
       );
@@ -130,9 +128,8 @@ export const addUserJobStatuses = async (data: any) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
-          body: JSON.stringify(data),
           credentials: "include",
         }
       );
@@ -166,9 +163,8 @@ export const updateUserJobStatuses = async (id: string, data: any) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
-          body: JSON.stringify(data),
           credentials: "include",
         }
       );
@@ -200,7 +196,7 @@ export const deleteUserJobStatuses = async (id: string) => {
         {
           method: "DELETE",
           headers: {
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
           credentials: "include",
         }
@@ -234,7 +230,7 @@ export const getYourJobs = async () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
           credentials: "include",
           // cache: "force-cache",
@@ -285,9 +281,8 @@ export const getYourJobs = async () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
-          body: JSON.stringify(jobDetails),
           credentials: "include",
         }
       );
@@ -309,7 +304,7 @@ export const getYourJobs = async () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
           credentials: "include",
         }
@@ -325,6 +320,8 @@ export const getYourJobs = async () => {
   // In your user_actions.ts file, modify the uploadResume function:
   export const uploadResume = async (formData: FormData) => {
     const token = await getCookie("token");
+    console.log(token, "here is the token")
+    console.log(formData, "here is the form data")
     
     try {
       const res = await fetch(
@@ -332,7 +329,7 @@ export const getYourJobs = async () => {
         {
           method: "POST",
           headers: {
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
           body: formData,
           credentials: "include",
@@ -340,6 +337,7 @@ export const getYourJobs = async () => {
       );
       
       const parsedData = await res.json();
+      console.log(parsedData, "here is the parsed data")
       
       return parsedData;
     } catch (error: any) {
@@ -364,7 +362,7 @@ export const getYourJobs = async () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(data),
           credentials: "include",

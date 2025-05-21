@@ -1,3 +1,5 @@
+'use server'
+
 export const uploadFileToS3 = async (file: any, signedUrl: string) => {
     const response = await fetch(signedUrl, {
       method: "PUT",
